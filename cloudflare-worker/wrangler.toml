@@ -1,4 +1,4 @@
-name = "grammar-review-sync"
+name = "jlptn1n2mastergrammarcard"
 main = "worker.js"
 compatibility_date = "2024-01-01"
 
@@ -6,4 +6,5 @@ compatibility_date = "2024-01-01"
 binding = "SYNC_KV"
 id = "2081d8db42e04f12b55b1492b3f6906b"
 
-### https://jlptn1n2mastergrammarcard.workers.dev
+# 部署后 wrangler 输出的地址（勿用 *.workers.dev 两段的简写）：
+# https://jlptn1n2mastergrammarcard.jlptn1n2mastergrammarcard.workers.dev

@@ -12,9 +12,20 @@
 
 ## 使用
 
-双击或在浏览器中打开 **`index.html`**（或打开 `语法复习/` 文件夹）。工具栏 **第1/2/3遍** 决定本次打分记入哪一遍；每遍各自保存熟悉/不熟（非全局一条状态）。左侧 **遍** 列三格对应三遍。上次学到的词条与遍次会自动恢复（本机 `localStorage`）。
+本地复习可双击 **`index.html`**（进度在 `localStorage`）。
 
-**Mac / iPad 同步**：配置一次云端（见 [SYNC_README.md](SYNC_README.md) 运行 `enable_cloud_sync.py`），之后只需在工具栏填 **同步邮箱**；换邮箱即换账号，进度自动上传/拉取。
+**要用云端同步**，不能用 `file://` 双击打开（会报 `Failed to fetch`），请任选其一：
+
+```bash
+./serve.sh
+# 浏览器打开 http://127.0.0.1:8765/index.html
+```
+
+或在 GitHub 仓库 **Settings → Pages → Deploy from branch `main` / root**，用 Pages 地址打开。
+
+工具栏 **第1/2/3遍** 决定本次打分记入哪一遍；每遍各自保存熟悉/不熟。左侧 **遍** 列三格对应三遍。上次学到的词条与遍次会自动恢复。
+
+**Mac / iPad 同步**：见 [SYNC_README.md](SYNC_README.md)，配置 Worker 后填 **同步邮箱** 即可；换邮箱即换账号。
 
 ## 重新生成
 

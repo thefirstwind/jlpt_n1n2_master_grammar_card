@@ -18,7 +18,10 @@
   function configured() {
     if (!CFG) return false;
     if (CFG.type === "http") {
-      return !!(CFG.baseUrl && !String(CFG.baseUrl).includes("xxx.workers.dev"));
+      const base = String(CFG.baseUrl || "");
+      if (!base || base.includes("xxx.workers.dev")) return false;
+      if (/github\.io|pages\.dev/i.test(base)) return false;
+      return true;
     }
     return !!(CFG.url && CFG.anonKey && !String(CFG.url).includes("YOUR_PROJECT"));
   }
@@ -32,6 +35,37 @@
     if (!el) return;
     el.textContent = msg || "";
     el.classList.toggle("err", !!isErr);
+  }
+
+  function isFileProtocol() {
+    return location.protocol === "file:";
+  }
+
+  function formatFetchError(err) {
+    if (isFileProtocol()) {
+      return "不能用 file:// 打开；请运行 ./serve.sh 或启用 GitHub Pages（见 README）";
+    }
+    const msg = err && err.message ? err.message : String(err);
+    if (msg === "Failed to fetch") {
+      return "无法连接同步服务（请确认 Worker 已部署且地址正确，见 SYNC_README）";
+    }
+    return msg;
+  }
+
+  async function checkSyncReachable() {
+    if (!configured() || CFG.type !== "http") return true;
+    if (isFileProtocol()) {
+      setStatus("同步需 http(s) 打开：运行 ./serve.sh 或用 GitHub Pages", true);
+      return false;
+    }
+    try {
+      const res = await fetch(`${CFG.baseUrl.replace(/\/$/, "")}/health`);
+      if (!res.ok) throw new Error(`health ${res.status}`);
+      return true;
+    } catch (e) {
+      setStatus(formatFetchError(e), true);
+      return false;
+    }
   }
 
   async function sha256Hex(text) {
@@ -189,7 +223,7 @@
       if (!silent) setStatus(`已同步 · ${new Date(payload.savedAt).toLocaleString()}`);
       return true;
     } catch (e) {
-      if (!silent) setStatus(`同步失败：${e.message || e}`, true);
+      if (!silent) setStatus(`同步失败：${formatFetchError(e)}`, true);
       return false;
     } finally {
       syncing = false;
@@ -242,7 +276,7 @@
       }
       return true;
     } catch (e) {
-      if (!silent) setStatus(`加载失败：${e.message || e}`, true);
+      if (!silent) setStatus(`加载失败：${formatFetchError(e)}`, true);
       return false;
     } finally {
       syncing = false;
@@ -291,14 +325,29 @@
     const saved = localStorage.getItem(LS_EMAIL) || "";
     if (emailEl) emailEl.value = saved;
 
+    if (!CFG) {
+      setStatus("首次请运行：python enable_cloud_sync.py", true);
+      return;
+    }
+    if (CFG.type === "http" && /github\.io|pages\.dev/i.test(String(CFG.baseUrl || ""))) {
+      setStatus("同步地址填错了：应是 Worker（*.workers.dev），不是 GitHub Pages", true);
+      return;
+    }
     if (!configured()) {
-      setStatus("首次请运行：python 语法复习/enable_cloud_sync.py", true);
+      setStatus("请运行 enable_cloud_sync.py 填入 Worker 地址", true);
       return;
     }
 
-    setStatus(saved ? "自动同步已开启" : "填写邮箱后自动同步");
+    if (isFileProtocol()) {
+      setStatus("同步需 http(s) 打开：运行 ./serve.sh", true);
+    } else {
+      setStatus(saved ? "自动同步已开启" : "填写邮箱后自动同步");
+    }
 
-    document.getElementById("sync-now")?.addEventListener("click", () => syncForCurrentEmail(false));
+    document.getElementById("sync-now")?.addEventListener("click", async () => {
+      if (!(await checkSyncReachable())) return;
+      syncForCurrentEmail(false);
+    });
     emailEl?.addEventListener("keydown", (e) => {
       if (e.key === "Enter") {
         e.preventDefault();
@@ -316,7 +365,8 @@
   window.__grammarReviewSyncPull = () => pull(false, true);
 
   initUI();
-  setTimeout(() => {
-    if (configured() && readEmail()) syncForCurrentEmail(true);
+  setTimeout(async () => {
+    if (!configured() || !readEmail()) return;
+    if (await checkSyncReachable()) syncForCurrentEmail(true);
   }, 600);
 })();

@@ -1,13 +1,20 @@
 /** 极简复习进度 API：按邮箱哈希存 JSON。部署后把 URL 写入 sync_config.builtin.js */
+function corsHeaders(request) {
+  const origin = request.headers.get("Origin");
+  const allowOrigin = origin && origin !== "null" ? origin : "*";
+  return {
+    "Access-Control-Allow-Origin": allowOrigin,
+    "Access-Control-Allow-Methods": "GET, PUT, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Accept",
+    "Access-Control-Max-Age": "86400",
+  };
+}
+
 export default {
   async fetch(request, env) {
-    const cors = {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "GET, PUT, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type",
-    };
+    const cors = corsHeaders(request);
     if (request.method === "OPTIONS") {
-      return new Response(null, { headers: cors });
+      return new Response(null, { status: 204, headers: cors });
     }
     const url = new URL(request.url);
     if (url.pathname === "/health") {

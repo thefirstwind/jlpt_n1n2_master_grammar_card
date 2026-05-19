@@ -1,1 +1,1 @@
-window.GRAMMAR_SYNC_CONFIG = {"type": "http", "baseUrl": "https://jlptn1n2mastergrammarcard.workers.dev"};
+window.GRAMMAR_SYNC_CONFIG = {"type": "http", "baseUrl": "https://jlptn1n2mastergrammarcard.jlptn1n2mastergrammarcard.workers.dev"};
