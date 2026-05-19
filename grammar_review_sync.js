@@ -301,6 +301,10 @@
   }
 
   function reloadReviewUI() {
+    if (typeof window.__grammarReviewApplySync === "function") {
+      window.__grammarReviewApplySync();
+      return;
+    }
     if (typeof window.__grammarReviewReloadFromStorage === "function") {
       window.__grammarReviewReloadFromStorage();
     } else {

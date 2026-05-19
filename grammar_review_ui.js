@@ -131,11 +131,36 @@
     }
   }
 
+  function preserveIndexScroll(run) {
+    const panel = document.getElementById("index-scroll");
+    const top = panel ? panel.scrollTop : 0;
+    run();
+    if (!panel) return;
+    const restore = () => {
+      panel.scrollTop = top;
+    };
+    restore();
+    requestAnimationFrame(() => {
+      restore();
+      requestAnimationFrame(restore);
+    });
+  }
+
+  /** 云端同步后：只重读进度并刷新左侧遍次/统计，不滚动、不重载整页 */
+  function applySyncFromStorage() {
+    preserveIndexScroll(() => {
+      store = loadStore();
+      loadPassPref();
+      updateClearButtonsLabel();
+      refreshAllUI();
+    });
+  }
+
   function reloadFromStorage() {
     store = loadStore();
     loadPassPref();
     loadShufflePref();
-    updateClearCardButtonLabel();
+    updateClearButtonsLabel();
     refreshAllUI();
     if (typeof window.__grammarReviewGetLastPlace === "function") {
       const last = window.__grammarReviewGetLastPlace();
@@ -150,6 +175,7 @@
     location.reload();
   }
 
+  window.__grammarReviewApplySync = applySyncFromStorage;
   window.__grammarReviewReloadFromStorage = reloadFromStorage;
 
   function getPassMarks(aid) {
@@ -219,11 +245,18 @@
     refreshAllUI(aid);
   }
 
-  function passDotStatusClass(m) {
+  function passChipStatusClass(m) {
     if (!m.done) return "st-new";
     if (m.status === STATUS.GOOD) return "st-good";
     if (m.status === STATUS.HARD || m.status === STATUS.LEARNING) return "st-hard";
     return "st-new";
+  }
+
+  function passChipLabel(m) {
+    if (!m.done) return "";
+    if (m.status === STATUS.GOOD) return "✓";
+    if (m.status === STATUS.HARD || m.status === STATUS.LEARNING) return "×";
+    return "";
   }
 
   function indexProgressHtml(aid) {
@@ -233,7 +266,7 @@
       const n = i + 1;
       const m = marks[i];
       const isCurrent = n === currentPass;
-      const dotCls = ["pass-dot", passDotStatusClass(m), isCurrent ? "current" : ""]
+      const chipCls = ["pass-chip", passChipStatusClass(m), isCurrent ? "current" : ""]
         .filter(Boolean)
         .join(" ");
       const hint = m.done
@@ -241,11 +274,13 @@
         : isCurrent
           ? `第${n}遍（当前）· 未评`
           : `第${n}遍 · 未评`;
-      cells += `<div class="idx-pass-cell${isCurrent ? " current" : ""}" title="${hint}">` +
-        `<span class="${dotCls}"></span>` +
-        `</div>`;
+      const label = passChipLabel(m);
+      cells +=
+        `<span class="${chipCls}" title="${hint}" aria-label="${hint}">` +
+        (label ? `<span class="pass-chip-icon">${label}</span>` : "") +
+        `</span>`;
     }
-    return `<div class="idx-pass-grid">${cells}</div>`;
+    return `<div class="idx-pass-row">${cells}</div>`;
   }
 
   function allAids() {
@@ -450,7 +485,7 @@
     deck = built.aids;
     deckShuffled = built.shuffled;
     reviewHistory = [];
-    updateClearCardButtonLabel();
+    updateClearButtonsLabel();
     if (!deck.length) {
       const scope =
         passIncompleteCheckbox && passIncompleteCheckbox.checked
@@ -550,16 +585,51 @@
       btn.classList.toggle("active", parseInt(btn.dataset.pass, 10) === n);
     });
     savePassPref();
-    updateClearCardButtonLabel();
+    updateClearButtonsLabel();
     saveLastPlace(lastViewedAid);
     refreshAllUI();
   }
 
-  function updateClearCardButtonLabel() {
-    const btn = document.getElementById("rv-clear-card");
-    if (!btn) return;
-    btn.textContent = "清除本条";
-    btn.title = `清除本条在第${currentPass}遍的复习记录（其它词条与其它遍次不受影响）`;
+  function updateClearButtonsLabel() {
+    const passBtn = document.querySelector("[data-clear-pass]");
+    if (passBtn) {
+      passBtn.textContent = `清除第${currentPass}遍`;
+      passBtn.title = `清除全部 238 条语法在第${currentPass}遍的记录（其它遍次不动）`;
+    }
+    const cardBtn = document.getElementById("rv-clear-card");
+    if (cardBtn) {
+      cardBtn.textContent = "清除本条";
+      cardBtn.title = `清除本条在第${currentPass}遍的复习记录（其它词条与其它遍次不受影响）`;
+    }
+  }
+
+  function clearCurrentPass() {
+    if (
+      !confirm(
+        `清除全部语法在第${currentPass}遍的复习记录？\n共 238 条，其它遍次（第${currentPass === 1 ? "2、3" : currentPass === 2 ? "1、3" : "1、2"}遍）保留。`
+      )
+    ) {
+      return;
+    }
+    const i = currentPass - 1;
+    for (const aid of Object.keys(store.cards)) {
+      const prev = store.cards[aid];
+      if (!prev) continue;
+      const marks = clonePassMarks(getPassMarks(aid));
+      marks[i] = { done: false, status: STATUS.NEW };
+      const hasAny = marks.some((m) => m.done);
+      if (hasAny) {
+        store.cards[aid] = {
+          updated: Date.now(),
+          reviews: prev.reviews,
+          passMarks: marks,
+        };
+      } else {
+        delete store.cards[aid];
+      }
+    }
+    saveStore();
+    preserveIndexScroll(() => refreshAllUI());
   }
 
   function clearCurrentCardPass() {
@@ -567,7 +637,7 @@
     if (!aid) return;
     if (
       !confirm(
-        `清除本条在第${currentPass}遍的复习记录？\n其它语法条目及其它遍次保留。（仅本浏览器）`
+        `清除本条在第${currentPass}遍的复习记录？\n其它语法条目及其它遍次保留。`
       )
     ) {
       return;
@@ -593,7 +663,7 @@
 
   loadShufflePref();
   loadPassPref();
-  updateClearCardButtonLabel();
+  updateClearButtonsLabel();
 
   shuffleCheckbox?.addEventListener("change", () => {
     shuffleDeck = shuffleCheckbox.checked;
@@ -627,6 +697,7 @@
   document.getElementById("rv-good")?.addEventListener("click", () => rate(STATUS.GOOD));
 
   document.getElementById("rv-clear-card")?.addEventListener("click", clearCurrentCardPass);
+  document.querySelector("[data-clear-pass]")?.addEventListener("click", clearCurrentPass);
 
   document.querySelectorAll(".review-filter-btn").forEach((btn) => {
     btn.addEventListener("click", () => {

@@ -704,7 +704,7 @@ a.go:hover {{ text-decoration: underline; }}
   <div class="toolbar-top">
     <div class="toolbar-brand">
       <h1>新完全掌握 · N1/N2 语法复习</h1>
-      <p class="meta">共 {len(points)} 条（N1 {n1} · N2 {n2}）· 五十音排序 · 重要度★＝<strong>55% 本地27套N1真题</strong> + <strong>45% 网上分档</strong>综合评定 · <strong>计划复习3遍</strong>（每遍单独记熟悉/不熟）· 数据保存在本机浏览器</p>
+      <p class="meta">共 {len(points)} 条（N1 {n1} · N2 {n2}）· 五十音排序 · 重要度★＝<strong>55% 本地27套N1真题</strong> + <strong>45% 网上分档</strong>综合评定 · <strong>计划复习3遍</strong>（每遍单独记熟悉/不熟）· 右上角填<strong>同步邮箱</strong>可在 Mac / iPad 同步进度</p>
     </div>
     <div class="sync-toolbar" id="sync-toolbar" hidden>
       <span class="sync-toolbar-label">同步</span>
@@ -741,6 +741,7 @@ a.go:hover {{ text-decoration: underline; }}
     <label class="pass-incomplete-toggle" title="卡片复习只出当前遍尚未完成的语法">
       <input type="checkbox" id="pass-incomplete" checked> 仅本遍未完成
     </label>
+    <button type="button" class="pass-clear-btn" data-clear-pass title="清除当前遍全部记录">清除第1遍</button>
   </div>
 </header>
 <main class="layout">
@@ -749,7 +750,7 @@ a.go:hover {{ text-decoration: underline; }}
     <p class="index-hint">滚轮 / 触控板在此翻阅 · ↑↓ 或 J/K 移动 · Enter 打开</p>
     <div class="index-scroll" id="index-scroll" tabindex="0" aria-label="语法索引列表">
       <table id="idx">
-        <thead><tr><th>序</th><th>级别</th><th title="三个圆点=第1/2/3遍：灰未评、红不熟、绿熟悉">遍</th><th>重要度</th><th>语法</th><th>课</th></tr></thead>
+        <thead><tr><th>序</th><th>级别</th><th title="三个方格=第1/2/3遍：白框未评、绿✓熟悉、红×不熟；橙框=当前遍">遍</th><th>重要度</th><th>语法</th><th>课</th></tr></thead>
         <tbody>{"".join(rows)}</tbody>
       </table>
     </div>
@@ -1011,6 +1012,8 @@ const LESSON_TITLES = {lesson_titles_json};
 
   window.__applyGrammarFilter = applyFilter;
   window.__grammarGoTo = goTo;
+  window.__grammarLockIndexScroll = lockIndexScrollTop;
+  window.__grammarRestoreIndexScroll = restoreIndexScrollTop;
 
   document.querySelector('#idx tbody').addEventListener('click', e => {{
     const tr = e.target.closest('tr');
