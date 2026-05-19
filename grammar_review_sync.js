@@ -94,9 +94,67 @@
     return e;
   }
 
+  function parseReviewRaw(str) {
+    if (!str) return { v: 3, cards: {} };
+    try {
+      const data = JSON.parse(str);
+      return data && data.cards ? data : { v: 3, cards: {} };
+    } catch {
+      return { v: 3, cards: {} };
+    }
+  }
+
+  function reviewProgressCount(str) {
+    const data = parseReviewRaw(str);
+    return Object.keys(data.cards || {}).length;
+  }
+
+  function mergeReviewRaw(localStr, cloudStr) {
+    const local = parseReviewRaw(localStr);
+    const cloud = parseReviewRaw(cloudStr);
+    const cards = {};
+    const aids = new Set([...Object.keys(local.cards || {}), ...Object.keys(cloud.cards || {})]);
+    for (const aid of aids) {
+      const l = local.cards[aid];
+      const c = cloud.cards[aid];
+      if (!l) cards[aid] = c;
+      else if (!c) cards[aid] = l;
+      else cards[aid] = (l.updated || 0) >= (c.updated || 0) ? l : c;
+    }
+    return JSON.stringify({ v: 3, cards });
+  }
+
+  function pickNewerPlace(localStr, cloudStr) {
+    try {
+      const l = localStr ? JSON.parse(localStr) : null;
+      const c = cloudStr ? JSON.parse(cloudStr) : null;
+      if (!l) return cloudStr;
+      if (!c) return localStr;
+      return (l.updated || 0) >= (c.updated || 0) ? localStr : cloudStr;
+    } catch {
+      return localStr || cloudStr;
+    }
+  }
+
+  function mergePayloads(local, cloud) {
+    if (!cloud) return local;
+    if (!local) return cloud;
+    const localCards = reviewProgressCount(local.review);
+    const cloudCards = reviewProgressCount(cloud.review);
+    const savedAt = Math.max(local.savedAt || 0, cloud.savedAt || 0);
+    return {
+      v: 1,
+      savedAt,
+      review: mergeReviewRaw(local.review, cloud.review),
+      lastPlace: pickNewerPlace(local.lastPlace, cloud.lastPlace),
+      currentPass:
+        localCards >= cloudCards ? local.currentPass ?? cloud.currentPass : cloud.currentPass ?? local.currentPass,
+      shuffle: local.shuffle != null && local.shuffle !== "" ? local.shuffle : cloud.shuffle,
+    };
+  }
+
   function collectPayload() {
-    const savedAt = Date.now();
-    localStorage.setItem(LS_LOCAL_SAVED, String(savedAt));
+    const savedAt = localSavedAt() || Date.now();
     return {
       v: 1,
       savedAt,
@@ -109,19 +167,28 @@
 
   function localSavedAt() {
     const n = parseInt(localStorage.getItem(LS_LOCAL_SAVED) || "0", 10);
-    if (n) return n;
+    let max = n;
     try {
       const raw = localStorage.getItem(KEYS.review);
-      if (!raw) return 0;
+      if (!raw) return max;
       const data = JSON.parse(raw);
-      let max = 0;
       for (const c of Object.values(data.cards || {})) {
         if (c && c.updated > max) max = c.updated;
       }
       return max;
     } catch {
-      return 0;
+      return max;
     }
+  }
+
+  async function fetchCloudPayload(id) {
+    if (CFG.type === "http") {
+      const data = await pullHttp(id);
+      if (data && data.empty) return null;
+      return data;
+    }
+    const row = await pullSupabase(id);
+    return row ? row.payload : null;
   }
 
   function applyPayload(payload, cloudSavedAt) {
@@ -136,11 +203,12 @@
     return true;
   }
 
-  async function pushHttp(id, payload) {
+  async function pushHttp(id, payload, opts) {
     const res = await fetch(`${CFG.baseUrl.replace(/\/$/, "")}/?id=${encodeURIComponent(id)}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
+      keepalive: !!(opts && opts.keepalive),
     });
     if (!res.ok) throw new Error(await res.text());
   }
@@ -198,9 +266,9 @@
     return { payload: row.payload, cloudAt };
   }
 
-  async function push(silent) {
+  async function push(silent, payloadIn, opts) {
     if (!configured()) {
-      if (!silent) setStatus("请先运行：python 语法复习/enable_cloud_sync.py", true);
+      if (!silent) setStatus("请先运行：python enable_cloud_sync.py", true);
       return false;
     }
     const email = readEmail();
@@ -210,15 +278,17 @@
     }
     saveEmail(email);
     const id = await accountId(email);
-    const payload = collectPayload();
+    const payload = payloadIn || collectPayload();
+    payload.savedAt = Date.now();
     syncing = true;
     if (!silent) setStatus("同步中…");
     try {
       if (CFG.type === "http") {
-        await pushHttp(id, payload);
+        await pushHttp(id, payload, opts);
       } else {
         await pushSupabase(id, email, payload);
       }
+      localStorage.setItem(LS_LOCAL_SAVED, String(payload.savedAt));
       localStorage.setItem(LS_CLOUD_SAVED, String(payload.savedAt));
       if (!silent) setStatus(`已同步 · ${new Date(payload.savedAt).toLocaleString()}`);
       return true;
@@ -230,57 +300,55 @@
     }
   }
 
-  async function pull(silent, preferCloud) {
-    if (!configured()) {
-      if (!silent) setStatus("请先运行：python 语法复习/enable_cloud_sync.py", true);
-      return false;
+  function reloadReviewUI() {
+    if (typeof window.__grammarReviewReloadFromStorage === "function") {
+      window.__grammarReviewReloadFromStorage();
+    } else {
+      location.reload();
     }
+  }
+
+  async function syncMerge(silent) {
+    if (!configured()) return false;
     const email = readEmail();
-    if (!email) {
-      if (!silent) setStatus("请填写邮箱", true);
-      return false;
-    }
+    if (!email) return false;
+    if (syncing) return false;
     saveEmail(email);
     const id = await accountId(email);
     syncing = true;
-    if (!silent) setStatus("加载云端…");
+    if (!silent) setStatus("同步中…");
     try {
-      let cloudPayload = null;
-      let cloudAt = 0;
+      const local = collectPayload();
+      let cloud = null;
+      try {
+        cloud = await fetchCloudPayload(id);
+      } catch (e) {
+        if (!silent) setStatus(`拉取失败：${formatFetchError(e)}`, true);
+        return false;
+      }
+      const merged = mergePayloads(local, cloud);
+      merged.savedAt = Date.now();
+      applyPayload(merged, merged.savedAt);
       if (CFG.type === "http") {
-        cloudPayload = await pullHttp(id);
-        cloudAt = cloudPayload && cloudPayload.savedAt ? cloudPayload.savedAt : 0;
+        await pushHttp(id, merged);
       } else {
-        const row = await pullSupabase(id);
-        if (row) {
-          cloudPayload = row.payload;
-          cloudAt = row.cloudAt;
-        }
+        await pushSupabase(id, email, merged);
       }
-      if (!cloudPayload) {
-        if (!silent) setStatus("该邮箱暂无云端记录，将上传本机进度");
-        await push(silent);
-        return false;
-      }
-      const localAt = localSavedAt();
-      if (!preferCloud && localAt > cloudAt) {
-        if (!silent) setStatus("本机较新，已保留本机（点「立即同步」可上传）");
-        return false;
-      }
-      applyPayload(cloudPayload, cloudAt);
-      if (!silent) setStatus(`已加载 · ${new Date(cloudAt).toLocaleString()}`);
-      if (typeof window.__grammarReviewReloadFromStorage === "function") {
-        window.__grammarReviewReloadFromStorage();
-      } else {
-        location.reload();
-      }
+      localStorage.setItem(LS_LOCAL_SAVED, String(merged.savedAt));
+      localStorage.setItem(LS_CLOUD_SAVED, String(merged.savedAt));
+      reloadReviewUI();
+      if (!silent) setStatus(`已同步 · ${new Date(merged.savedAt).toLocaleString()}`);
       return true;
     } catch (e) {
-      if (!silent) setStatus(`加载失败：${formatFetchError(e)}`, true);
+      if (!silent) setStatus(`同步失败：${formatFetchError(e)}`, true);
       return false;
     } finally {
       syncing = false;
     }
+  }
+
+  async function pull(silent) {
+    return syncMerge(silent);
   }
 
   function schedulePush() {
@@ -288,22 +356,11 @@
     const email = readEmail();
     if (!email) return;
     clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(() => push(true), 2000);
+    debounceTimer = setTimeout(() => syncMerge(true), 1200);
   }
 
   async function syncForCurrentEmail(silent) {
-    const email = readEmail();
-    if (!email || !configured()) return;
-    saveEmail(email);
-    const cloudAt = parseInt(localStorage.getItem(LS_CLOUD_SAVED) || "0", 10);
-    const localAt = localSavedAt();
-    if (cloudAt > localAt + 500) {
-      await pull(silent, true);
-    } else if (localAt > cloudAt + 500 || !cloudAt) {
-      await push(silent);
-    } else if (!silent) {
-      setStatus("已是最新");
-    }
+    return syncMerge(silent);
   }
 
   async function onEmailCommitted() {
@@ -311,10 +368,21 @@
     if (!email) return;
     saveEmail(email);
     if (!configured()) return;
-    setStatus("切换邮箱，加载中…");
-    await pull(false, true);
-    await push(true);
+    setStatus("切换邮箱，合并同步…");
+    await syncMerge(false);
   }
+
+  window.addEventListener("beforeunload", () => {
+    if (!configured() || !readEmail() || syncing) return;
+    const email = readEmail();
+    accountId(email).then((id) => {
+      const payload = collectPayload();
+      payload.savedAt = Date.now();
+      if (CFG.type === "http") {
+        pushHttp(id, payload, { keepalive: true }).catch(() => {});
+      }
+    });
+  });
 
   function initUI() {
     const bar = document.getElementById("sync-toolbar");
@@ -362,7 +430,8 @@
 
   window.__grammarReviewScheduleSync = schedulePush;
   window.__grammarReviewSyncPush = () => push(false);
-  window.__grammarReviewSyncPull = () => pull(false, true);
+  window.__grammarReviewSyncPull = () => syncMerge(false);
+  window.__grammarReviewSyncMerge = syncMerge;
 
   initUI();
   setTimeout(async () => {
