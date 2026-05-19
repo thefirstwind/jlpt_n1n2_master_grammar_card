@@ -228,7 +228,6 @@
 
   function indexProgressHtml(aid) {
     const marks = getPassMarks(aid);
-    const done = passDoneCount(aid);
     let cells = "";
     for (let i = 0; i < TARGET_PASSES; i++) {
       const n = i + 1;
@@ -246,12 +245,7 @@
         `<span class="${dotCls}"></span>` +
         `</div>`;
     }
-    return (
-      `<div class="idx-progress">` +
-      `<div class="idx-pass-grid">${cells}</div>` +
-      `<span class="pass-fraction" title="已完成遍数">${done}/${TARGET_PASSES}</span>` +
-      `</div>`
-    );
+    return `<div class="idx-pass-grid">${cells}</div>`;
   }
 
   function allAids() {

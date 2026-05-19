@@ -493,6 +493,16 @@ body {{
   background: rgba(246,245,242,.95); backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--border); padding: .75rem 1rem;
 }}
+.toolbar-top {{
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem 1.25rem;
+  margin-bottom: 0.5rem;
+}}
+.toolbar-brand {{ flex: 1; min-width: 0; }}
+.toolbar-brand h1 {{ margin: 0 0 .35rem; font-size: 1.15rem; font-weight: 700; }}
+.toolbar-brand .meta {{ font-size: .8rem; color: var(--muted); margin: 0; }}
 .toolbar h1 {{ margin: 0 0 .5rem; font-size: 1.15rem; font-weight: 700; }}
 .toolbar .meta {{ font-size: .8rem; color: var(--muted); margin-bottom: .5rem; }}
 .controls {{ display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }}
@@ -524,6 +534,9 @@ body {{
   gap: 0; max-width: 1400px; width: 100%; margin: 0 auto;
 }}
 @media (max-width: 900px) {{
+  .toolbar-top {{ flex-direction: column; align-items: stretch; }}
+  .sync-toolbar {{ max-width: 100%; justify-content: flex-start; }}
+  .sync-status {{ text-align: left; }}
   html, body {{ height: auto; overflow: auto; }}
   body {{ display: block; }}
   .layout {{
@@ -688,8 +701,18 @@ a.go:hover {{ text-decoration: underline; }}
 </head>
 <body>
 <header class="toolbar">
-  <h1>新完全掌握 · N1/N2 语法复习</h1>
-  <p class="meta">共 {len(points)} 条（N1 {n1} · N2 {n2}）· 五十音排序 · 重要度★＝<strong>55% 本地27套N1真题</strong> + <strong>45% 网上分档</strong>综合评定 · <strong>计划复习3遍</strong>（每遍单独记熟悉/不熟）· 数据保存在本机浏览器</p>
+  <div class="toolbar-top">
+    <div class="toolbar-brand">
+      <h1>新完全掌握 · N1/N2 语法复习</h1>
+      <p class="meta">共 {len(points)} 条（N1 {n1} · N2 {n2}）· 五十音排序 · 重要度★＝<strong>55% 本地27套N1真题</strong> + <strong>45% 网上分档</strong>综合评定 · <strong>计划复习3遍</strong>（每遍单独记熟悉/不熟）· 数据保存在本机浏览器</p>
+    </div>
+    <div class="sync-toolbar" id="sync-toolbar" hidden>
+      <span class="sync-toolbar-label">同步</span>
+      <input type="email" id="sync-email" class="sync-input" placeholder="邮箱" autocomplete="email" title="Mac / iPad 填同一邮箱">
+      <button type="button" class="filter-btn" id="sync-now">同步</button>
+      <span id="sync-status" class="sync-status"></span>
+    </div>
+  </div>
   <div class="controls">
     <input type="search" id="q" placeholder="搜索语法（如：が早いか、にあって）…" autocomplete="off">
     <button type="button" class="filter-btn active" data-level="ALL">全部</button>
@@ -718,12 +741,6 @@ a.go:hover {{ text-decoration: underline; }}
     <label class="pass-incomplete-toggle" title="卡片复习只出当前遍尚未完成的语法">
       <input type="checkbox" id="pass-incomplete" checked> 仅本遍未完成
     </label>
-  </div>
-  <div class="sync-toolbar" id="sync-toolbar" hidden>
-    <span class="sync-toolbar-label">同步邮箱</span>
-    <input type="email" id="sync-email" class="sync-input" placeholder="填写后 Mac / iPad 自动同步" autocomplete="email">
-    <button type="button" class="filter-btn" id="sync-now">立即同步</button>
-    <span id="sync-status" class="sync-status"></span>
   </div>
 </header>
 <main class="layout">
