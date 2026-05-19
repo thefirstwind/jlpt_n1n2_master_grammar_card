@@ -4434,25 +4434,17 @@ window.GRAMMAR_SYNC_CONFIG = {"type": "http", "baseUrl": "https://jlptn1n2master
     return Object.keys(data.cards || {}).length;
   }
 
-  function mergeReviewRaw(localStr, cloudStr, opts) {
+  function mergeReviewRaw(localStr, cloudStr) {
     const local = parseReviewRaw(localStr);
     const cloud = parseReviewRaw(cloudStr);
-    const localWins = !!(opts && opts.localWins);
     const cards = {};
     const aids = new Set([...Object.keys(local.cards || {}), ...Object.keys(cloud.cards || {})]);
     for (const aid of aids) {
       const l = local.cards[aid];
       const c = cloud.cards[aid];
-      if (!l && !c) continue;
-      if (!l) {
-        if (!localWins) cards[aid] = c;
-        continue;
-      }
-      if (!c) {
-        cards[aid] = l;
-        continue;
-      }
-      cards[aid] = (l.updated || 0) >= (c.updated || 0) ? l : c;
+      if (!l) cards[aid] = c;
+      else if (!c) cards[aid] = l;
+      else cards[aid] = (l.updated || 0) >= (c.updated || 0) ? l : c;
     }
     return JSON.stringify({ v: 3, cards });
   }
@@ -4474,14 +4466,11 @@ window.GRAMMAR_SYNC_CONFIG = {"type": "http", "baseUrl": "https://jlptn1n2master
     if (!local) return cloud;
     const localCards = reviewProgressCount(local.review);
     const cloudCards = reviewProgressCount(cloud.review);
-    const localSaved = local.savedAt || 0;
-    const cloudSaved = cloud.savedAt || 0;
-    const localWins = localSaved >= cloudSaved;
-    const savedAt = Math.max(localSaved, cloudSaved);
+    const savedAt = Math.max(local.savedAt || 0, cloud.savedAt || 0);
     return {
       v: 1,
       savedAt,
-      review: mergeReviewRaw(local.review, cloud.review, { localWins }),
+      review: mergeReviewRaw(local.review, cloud.review),
       lastPlace: pickNewerPlace(local.lastPlace, cloud.lastPlace),
       currentPass:
         localCards >= cloudCards ? local.currentPass ?? cloud.currentPass : cloud.currentPass ?? local.currentPass,
@@ -4490,7 +4479,7 @@ window.GRAMMAR_SYNC_CONFIG = {"type": "http", "baseUrl": "https://jlptn1n2master
   }
 
   function collectPayload() {
-    const savedAt = localSavedAt() || Date.now();
+    const savedAt = localSavedAt() || 0;
     return {
       v: 1,
       savedAt,
