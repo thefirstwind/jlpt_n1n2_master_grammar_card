@@ -30,10 +30,17 @@
     return document.getElementById("sync-status");
   }
 
+  function formatSyncTime(ts) {
+    const d = new Date(ts);
+    const p = (n) => String(n).padStart(2, "0");
+    return `${d.getMonth() + 1}/${d.getDate()} ${p(d.getHours())}:${p(d.getMinutes())}`;
+  }
+
   function setStatus(msg, isErr) {
     const el = statusEl();
     if (!el) return;
     el.textContent = msg || "";
+    el.title = msg || "";
     el.classList.toggle("err", !!isErr);
   }
 
@@ -55,7 +62,7 @@
   async function checkSyncReachable() {
     if (!configured() || CFG.type !== "http") return true;
     if (isFileProtocol()) {
-      setStatus("同步需 http(s) 打开：运行 ./serve.sh 或用 GitHub Pages", true);
+      setStatus("同步需 http(s) 打开：运行 ./serve.sh 或用 GitHub Pages（见 README）", true);
       return false;
     }
     try {

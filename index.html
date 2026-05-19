@@ -69,8 +69,9 @@ body {
 }
 @media (max-width: 900px) {
   .toolbar-top { flex-direction: column; align-items: stretch; }
-  .sync-toolbar { max-width: 100%; justify-content: flex-start; }
-  .sync-status { text-align: left; }
+  .sync-toolbar { align-items: flex-start; max-width: 100%; }
+  .sync-toolbar-row { justify-content: flex-start; }
+  .sync-status { text-align: left; max-width: 100%; }
   html, body { height: auto; overflow: auto; }
   body { display: block; }
   .layout {
@@ -354,45 +355,60 @@ a.go:hover { text-decoration: underline; }
 }
 .sync-toolbar {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 0.35rem 0.45rem;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.12rem;
   flex-shrink: 0;
-  max-width: min(26rem, 42vw);
+  max-width: min(22rem, 48vw);
   margin: 0;
   padding: 0;
   border: none;
   font-size: 0.82rem;
 }
 .sync-toolbar[hidden] { display: none !important; }
+.sync-toolbar-row {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.35rem;
+}
 .sync-toolbar-label { color: var(--muted); white-space: nowrap; font-size: 0.78rem; }
 .sync-input {
   padding: 0.32rem 0.5rem;
   border: 1px solid var(--border);
   border-radius: 6px;
   font-size: 0.82rem;
-  width: 9.5rem;
-  max-width: 100%;
-}
-#sync-now { white-space: nowrap; padding: 0.32rem 0.55rem; font-size: 0.82rem; }
-.sync-status {
-  color: var(--muted);
-  font-size: 0.72rem;
-  flex: 1 1 100%;
+  width: 8.5rem;
   min-width: 0;
-  text-align: right;
-  line-height: 1.3;
+  flex: 0 1 auto;
 }
-@media (max-width: 720px) {
+#sync-now { white-space: nowrap; padding: 0.32rem 0.55rem; font-size: 0.82rem; flex-shrink: 0; }
+.sync-status {
+  display: block;
+  width: 100%;
+  max-width: 22rem;
+  color: var(--muted);
+  font-size: 0.7rem;
+  line-height: 1.2;
+  text-align: right;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+@media (max-width: 900px) {
   .sync-toolbar {
+    align-items: flex-start;
     max-width: 100%;
-    width: 100%;
-    justify-content: flex-start;
   }
-  .sync-status { text-align: left; }
+  .sync-toolbar-row { justify-content: flex-start; }
+  .sync-status { text-align: left; max-width: 100%; }
 }
 .sync-status.err { color: #b91c1c; }
+.meta-hint {
+  cursor: help;
+  border-bottom: 1px dotted var(--muted);
+}
 .review-stats {
   font-size: 0.78rem;
   color: var(--muted);
@@ -585,13 +601,15 @@ tr.rv-hidden { display: none; }
   <div class="toolbar-top">
     <div class="toolbar-brand">
       <h1>新完全掌握 · N1/N2 语法复习</h1>
-      <p class="meta">共 238 条（N1 97 · N2 141）· 五十音排序 · 重要度★＝<strong>55% 本地27套N1真题</strong> + <strong>45% 网上分档</strong>综合评定 · <strong>计划复习3遍</strong>（每遍单独记熟悉/不熟）· 右上角填<strong>同步邮箱</strong>可在 Mac / iPad 同步进度</p>
+      <p class="meta">共 238 条（N1 97 · N2 141）· 五十音 · 重要度★＝<span class="meta-hint" title="55% 本地27套N1真题 + 45% 网上分档综合评定">真题55%+网评45%</span> · 三遍复习 · 填<strong>同步邮箱</strong>可跨设备同步</p>
     </div>
     <div class="sync-toolbar" id="sync-toolbar" hidden>
-      <span class="sync-toolbar-label">同步</span>
-      <input type="email" id="sync-email" class="sync-input" placeholder="邮箱" autocomplete="email" title="Mac / iPad 填同一邮箱">
-      <button type="button" class="filter-btn" id="sync-now">同步</button>
-      <span id="sync-status" class="sync-status"></span>
+      <div class="sync-toolbar-row">
+        <span class="sync-toolbar-label">同步</span>
+        <input type="email" id="sync-email" class="sync-input" placeholder="邮箱" autocomplete="email" title="Mac / iPad 填同一邮箱">
+        <button type="button" class="filter-btn" id="sync-now">同步</button>
+      </div>
+      <span id="sync-status" class="sync-status" title=""></span>
     </div>
   </div>
   <div class="controls">
@@ -4322,10 +4340,17 @@ window.GRAMMAR_SYNC_CONFIG = {"type": "http", "baseUrl": "https://jlptn1n2master
     return document.getElementById("sync-status");
   }
 
+  function formatSyncTime(ts) {
+    const d = new Date(ts);
+    const p = (n) => String(n).padStart(2, "0");
+    return `${d.getMonth() + 1}/${d.getDate()} ${p(d.getHours())}:${p(d.getMinutes())}`;
+  }
+
   function setStatus(msg, isErr) {
     const el = statusEl();
     if (!el) return;
     el.textContent = msg || "";
+    el.title = msg || "";
     el.classList.toggle("err", !!isErr);
   }
 
@@ -4347,7 +4372,7 @@ window.GRAMMAR_SYNC_CONFIG = {"type": "http", "baseUrl": "https://jlptn1n2master
   async function checkSyncReachable() {
     if (!configured() || CFG.type !== "http") return true;
     if (isFileProtocol()) {
-      setStatus("同步需 http(s) 打开：运行 ./serve.sh 或用 GitHub Pages", true);
+      setStatus("同步需 http(s) 打开：运行 ./serve.sh 或用 GitHub Pages（见 README）", true);
       return false;
     }
     try {

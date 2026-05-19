@@ -535,8 +535,9 @@ body {{
 }}
 @media (max-width: 900px) {{
   .toolbar-top {{ flex-direction: column; align-items: stretch; }}
-  .sync-toolbar {{ max-width: 100%; justify-content: flex-start; }}
-  .sync-status {{ text-align: left; }}
+  .sync-toolbar {{ align-items: flex-start; max-width: 100%; }}
+  .sync-toolbar-row {{ justify-content: flex-start; }}
+  .sync-status {{ text-align: left; max-width: 100%; }}
   html, body {{ height: auto; overflow: auto; }}
   body {{ display: block; }}
   .layout {{
@@ -704,13 +705,15 @@ a.go:hover {{ text-decoration: underline; }}
   <div class="toolbar-top">
     <div class="toolbar-brand">
       <h1>新完全掌握 · N1/N2 语法复习</h1>
-      <p class="meta">共 {len(points)} 条（N1 {n1} · N2 {n2}）· 五十音排序 · 重要度★＝<strong>55% 本地27套N1真题</strong> + <strong>45% 网上分档</strong>综合评定 · <strong>计划复习3遍</strong>（每遍单独记熟悉/不熟）· 右上角填<strong>同步邮箱</strong>可在 Mac / iPad 同步进度</p>
+      <p class="meta">共 {len(points)} 条（N1 {n1} · N2 {n2}）· 五十音 · 重要度★＝<span class="meta-hint" title="55% 本地27套N1真题 + 45% 网上分档综合评定">真题55%+网评45%</span> · 三遍复习 · 填<strong>同步邮箱</strong>可跨设备同步</p>
     </div>
     <div class="sync-toolbar" id="sync-toolbar" hidden>
-      <span class="sync-toolbar-label">同步</span>
-      <input type="email" id="sync-email" class="sync-input" placeholder="邮箱" autocomplete="email" title="Mac / iPad 填同一邮箱">
-      <button type="button" class="filter-btn" id="sync-now">同步</button>
-      <span id="sync-status" class="sync-status"></span>
+      <div class="sync-toolbar-row">
+        <span class="sync-toolbar-label">同步</span>
+        <input type="email" id="sync-email" class="sync-input" placeholder="邮箱" autocomplete="email" title="Mac / iPad 填同一邮箱">
+        <button type="button" class="filter-btn" id="sync-now">同步</button>
+      </div>
+      <span id="sync-status" class="sync-status" title=""></span>
     </div>
   </div>
   <div class="controls">
