@@ -1,8 +1,7 @@
-/** 邮箱云端同步（Supabase）。Mac / iPad 用同一邮箱+同步码即可共享进度。 */
+/** 邮箱云端同步：Mac / iPad 填同一邮箱即可。支持 http(Worker) 或 supabase。 */
 (function () {
   const CFG = window.GRAMMAR_SYNC_CONFIG;
   const LS_EMAIL = "shinkanzen_grammar_sync_email";
-  const LS_CODE = "shinkanzen_grammar_sync_code";
   const LS_LOCAL_SAVED = "shinkanzen_grammar_local_saved_at";
   const LS_CLOUD_SAVED = "shinkanzen_grammar_cloud_saved_at";
 
@@ -17,11 +16,11 @@
   let syncing = false;
 
   function configured() {
-    return !!(CFG && CFG.url && CFG.anonKey && !CFG.url.includes("YOUR_PROJECT"));
-  }
-
-  function table() {
-    return (CFG && CFG.table) || "grammar_review_sync";
+    if (!CFG) return false;
+    if (CFG.type === "http") {
+      return !!(CFG.baseUrl && !String(CFG.baseUrl).includes("xxx.workers.dev"));
+    }
+    return !!(CFG.url && CFG.anonKey && !String(CFG.url).includes("YOUR_PROJECT"));
   }
 
   function statusEl() {
@@ -42,28 +41,23 @@
       .join("");
   }
 
-  async function accountId(email, code) {
+  async function accountId(email) {
     const e = email.trim().toLowerCase();
     if (!e) throw new Error("请填写邮箱");
-    const c = (code || "").trim();
-    return sha256Hex(c ? `${e}:${c}` : e);
+    return sha256Hex(`grammar-review:${e}`);
   }
 
-  function readCredentials() {
+  function readEmail() {
     const emailEl = document.getElementById("sync-email");
-    const codeEl = document.getElementById("sync-code");
-    const email = (emailEl && emailEl.value) || localStorage.getItem(LS_EMAIL) || "";
-    const code = (codeEl && codeEl.value) || localStorage.getItem(LS_CODE) || "";
-    return { email, code };
+    return ((emailEl && emailEl.value) || localStorage.getItem(LS_EMAIL) || "").trim().toLowerCase();
   }
 
-  function saveCredentials(email, code) {
-    localStorage.setItem(LS_EMAIL, email.trim().toLowerCase());
-    localStorage.setItem(LS_CODE, code || "");
+  function saveEmail(email) {
+    const e = email.trim().toLowerCase();
+    localStorage.setItem(LS_EMAIL, e);
     const emailEl = document.getElementById("sync-email");
-    const codeEl = document.getElementById("sync-code");
-    if (emailEl) emailEl.value = email;
-    if (codeEl) codeEl.value = code;
+    if (emailEl) emailEl.value = e;
+    return e;
   }
 
   function collectPayload() {
@@ -108,51 +102,94 @@
     return true;
   }
 
-  function apiHeaders() {
-    return {
-      apikey: CFG.anonKey,
-      Authorization: `Bearer ${CFG.anonKey}`,
-      "Content-Type": "application/json",
-    };
+  async function pushHttp(id, payload) {
+    const res = await fetch(`${CFG.baseUrl.replace(/\/$/, "")}/?id=${encodeURIComponent(id)}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) throw new Error(await res.text());
+  }
+
+  async function pullHttp(id) {
+    const res = await fetch(`${CFG.baseUrl.replace(/\/$/, "")}/?id=${encodeURIComponent(id)}`, {
+      headers: { Accept: "application/json" },
+    });
+    if (!res.ok) throw new Error(await res.text());
+    const text = await res.text();
+    if (!text) return null;
+    const data = JSON.parse(text);
+    if (data && data.empty) return null;
+    return data;
+  }
+
+  async function pushSupabase(id, email, payload) {
+    const updated_at = new Date(payload.savedAt).toISOString();
+    const res = await fetch(`${CFG.url}/rest/v1/${CFG.table || "grammar_review_sync"}`, {
+      method: "POST",
+      headers: {
+        apikey: CFG.anonKey,
+        Authorization: `Bearer ${CFG.anonKey}`,
+        "Content-Type": "application/json",
+        Prefer: "resolution=merge-duplicates,return=minimal",
+      },
+      body: JSON.stringify([
+        {
+          account_id: id,
+          email_hint: email.replace(/(.{2}).+(@.+)/, "$1***$2"),
+          payload,
+          updated_at,
+        },
+      ]),
+    });
+    if (!res.ok) throw new Error(await res.text());
+    return payload.savedAt;
+  }
+
+  async function pullSupabase(id) {
+    const res = await fetch(
+      `${CFG.url}/rest/v1/${CFG.table || "grammar_review_sync"}?account_id=eq.${encodeURIComponent(id)}&select=payload,updated_at`,
+      {
+        headers: {
+          apikey: CFG.anonKey,
+          Authorization: `Bearer ${CFG.anonKey}`,
+        },
+      }
+    );
+    if (!res.ok) throw new Error(await res.text());
+    const rows = await res.json();
+    if (!rows || !rows.length) return null;
+    const row = rows[0];
+    const cloudAt = row.updated_at ? new Date(row.updated_at).getTime() : row.payload?.savedAt || 0;
+    return { payload: row.payload, cloudAt };
   }
 
   async function push(silent) {
     if (!configured()) {
-      if (!silent) setStatus("未配置云端：见 语法复习/SYNC_README.md", true);
+      if (!silent) setStatus("请先运行：python 语法复习/enable_cloud_sync.py", true);
       return false;
     }
-    const { email, code } = readCredentials();
-    saveCredentials(email, code);
-    const id = await accountId(email, code);
+    const email = readEmail();
+    if (!email) {
+      if (!silent) setStatus("请填写邮箱", true);
+      return false;
+    }
+    saveEmail(email);
+    const id = await accountId(email);
     const payload = collectPayload();
-    const updated_at = new Date(payload.savedAt).toISOString();
     syncing = true;
-    if (!silent) setStatus("上传中…");
+    if (!silent) setStatus("同步中…");
     try {
-      const res = await fetch(`${CFG.url}/rest/v1/${table()}`, {
-        method: "POST",
-        headers: {
-          ...apiHeaders(),
-          Prefer: "resolution=merge-duplicates,return=minimal",
-        },
-        body: JSON.stringify([
-          {
-            account_id: id,
-            email_hint: email.trim().toLowerCase().replace(/(.{2}).+(@.+)/, "$1***$2"),
-            payload,
-            updated_at,
-          },
-        ]),
-      });
-      if (!res.ok) {
-        const t = await res.text();
-        throw new Error(t || res.statusText);
+      if (CFG.type === "http") {
+        await pushHttp(id, payload);
+      } else {
+        await pushSupabase(id, email, payload);
       }
       localStorage.setItem(LS_CLOUD_SAVED, String(payload.savedAt));
-      if (!silent) setStatus(`已保存 · ${new Date(payload.savedAt).toLocaleString()}`);
+      if (!silent) setStatus(`已同步 · ${new Date(payload.savedAt).toLocaleString()}`);
       return true;
     } catch (e) {
-      if (!silent) setStatus(`上传失败：${e.message || e}`, true);
+      if (!silent) setStatus(`同步失败：${e.message || e}`, true);
       return false;
     } finally {
       syncing = false;
@@ -161,42 +198,43 @@
 
   async function pull(silent, preferCloud) {
     if (!configured()) {
-      if (!silent) setStatus("未配置云端：见 语法复习/SYNC_README.md", true);
+      if (!silent) setStatus("请先运行：python 语法复习/enable_cloud_sync.py", true);
       return false;
     }
-    const { email, code } = readCredentials();
-    saveCredentials(email, code);
-    const id = await accountId(email, code);
+    const email = readEmail();
+    if (!email) {
+      if (!silent) setStatus("请填写邮箱", true);
+      return false;
+    }
+    saveEmail(email);
+    const id = await accountId(email);
     syncing = true;
-    if (!silent) setStatus("拉取中…");
+    if (!silent) setStatus("加载云端…");
     try {
-      const res = await fetch(
-        `${CFG.url}/rest/v1/${table()}?account_id=eq.${encodeURIComponent(id)}&select=payload,updated_at`,
-        { headers: apiHeaders() }
-      );
-      if (!res.ok) {
-        const t = await res.text();
-        throw new Error(t || res.statusText);
+      let cloudPayload = null;
+      let cloudAt = 0;
+      if (CFG.type === "http") {
+        cloudPayload = await pullHttp(id);
+        cloudAt = cloudPayload && cloudPayload.savedAt ? cloudPayload.savedAt : 0;
+      } else {
+        const row = await pullSupabase(id);
+        if (row) {
+          cloudPayload = row.payload;
+          cloudAt = row.cloudAt;
+        }
       }
-      const rows = await res.json();
-      if (!rows || !rows.length) {
-        if (!silent) setStatus("云端暂无记录，请先保存一次");
+      if (!cloudPayload) {
+        if (!silent) setStatus("该邮箱暂无云端记录，将上传本机进度");
+        await push(silent);
         return false;
       }
-      const row = rows[0];
-      const cloudPayload = row.payload;
-      const cloudAt = row.updated_at
-        ? new Date(row.updated_at).getTime()
-        : cloudPayload && cloudPayload.savedAt
-          ? cloudPayload.savedAt
-          : 0;
       const localAt = localSavedAt();
       if (!preferCloud && localAt > cloudAt) {
-        if (!silent) setStatus("本机更新，未覆盖（可先保存到云端）");
+        if (!silent) setStatus("本机较新，已保留本机（点「立即同步」可上传）");
         return false;
       }
       applyPayload(cloudPayload, cloudAt);
-      if (!silent) setStatus(`已同步 · ${new Date(cloudAt).toLocaleString()}`);
+      if (!silent) setStatus(`已加载 · ${new Date(cloudAt).toLocaleString()}`);
       if (typeof window.__grammarReviewReloadFromStorage === "function") {
         window.__grammarReviewReloadFromStorage();
       } else {
@@ -204,7 +242,7 @@
       }
       return true;
     } catch (e) {
-      if (!silent) setStatus(`拉取失败：${e.message || e}`, true);
+      if (!silent) setStatus(`加载失败：${e.message || e}`, true);
       return false;
     } finally {
       syncing = false;
@@ -213,54 +251,63 @@
 
   function schedulePush() {
     if (!configured()) return;
-    const auto = document.getElementById("sync-auto");
-    if (auto && !auto.checked) return;
+    const email = readEmail();
+    if (!email) return;
     clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(() => push(true), 2500);
+    debounceTimer = setTimeout(() => push(true), 2000);
   }
 
-  async function tryAutoPullOnLoad() {
-    if (!configured()) return;
-    const email = localStorage.getItem(LS_EMAIL);
-    if (!email) return;
-    const emailEl = document.getElementById("sync-email");
-    if (emailEl) emailEl.value = email;
-    const codeEl = document.getElementById("sync-code");
-    if (codeEl) codeEl.value = localStorage.getItem(LS_CODE) || "";
+  async function syncForCurrentEmail(silent) {
+    const email = readEmail();
+    if (!email || !configured()) return;
+    saveEmail(email);
     const cloudAt = parseInt(localStorage.getItem(LS_CLOUD_SAVED) || "0", 10);
     const localAt = localSavedAt();
     if (cloudAt > localAt + 500) {
-      await pull(true, true);
-    } else if (localAt > cloudAt + 500) {
-      await push(true);
+      await pull(silent, true);
+    } else if (localAt > cloudAt + 500 || !cloudAt) {
+      await push(silent);
+    } else if (!silent) {
+      setStatus("已是最新");
     }
+  }
+
+  async function onEmailCommitted() {
+    const email = readEmail();
+    if (!email) return;
+    saveEmail(email);
+    if (!configured()) return;
+    setStatus("切换邮箱，加载中…");
+    await pull(false, true);
+    await push(true);
   }
 
   function initUI() {
     const bar = document.getElementById("sync-toolbar");
     if (!bar) return;
     bar.hidden = false;
+
+    const emailEl = document.getElementById("sync-email");
+    const saved = localStorage.getItem(LS_EMAIL) || "";
+    if (emailEl) emailEl.value = saved;
+
     if (!configured()) {
-      setStatus("未配置 Supabase（见 SYNC_README.md）", true);
+      setStatus("首次请运行：python 语法复习/enable_cloud_sync.py", true);
       return;
     }
-    const email = localStorage.getItem(LS_EMAIL) || "";
-    const code = localStorage.getItem(LS_CODE) || "";
-    const emailEl = document.getElementById("sync-email");
-    const codeEl = document.getElementById("sync-code");
-    if (emailEl) emailEl.value = email;
-    if (codeEl) codeEl.value = code;
-    const auto = document.getElementById("sync-auto");
-    if (auto) auto.checked = localStorage.getItem("shinkanzen_grammar_sync_auto") !== "0";
 
-    document.getElementById("sync-push")?.addEventListener("click", () => push(false));
-    document.getElementById("sync-pull")?.addEventListener("click", () => pull(false, true));
-    auto?.addEventListener("change", () => {
-      localStorage.setItem("shinkanzen_grammar_sync_auto", auto.checked ? "1" : "0");
-      if (auto.checked) schedulePush();
+    setStatus(saved ? "自动同步已开启" : "填写邮箱后自动同步");
+
+    document.getElementById("sync-now")?.addEventListener("click", () => syncForCurrentEmail(false));
+    emailEl?.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        onEmailCommitted();
+      }
     });
-    emailEl?.addEventListener("change", () => {
-      saveCredentials(emailEl.value, codeEl ? codeEl.value : "");
+    emailEl?.addEventListener("blur", () => {
+      const v = readEmail();
+      if (v && v !== (localStorage.getItem(LS_EMAIL) || "")) onEmailCommitted();
     });
   }
 
@@ -269,11 +316,7 @@
   window.__grammarReviewSyncPull = () => pull(false, true);
 
   initUI();
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", () => {
-      setTimeout(tryAutoPullOnLoad, 400);
-    });
-  } else {
-    setTimeout(tryAutoPullOnLoad, 400);
-  }
+  setTimeout(() => {
+    if (configured() && readEmail()) syncForCurrentEmail(true);
+  }, 600);
 })();

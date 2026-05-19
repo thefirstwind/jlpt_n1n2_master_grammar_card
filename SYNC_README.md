@@ -1,19 +1,38 @@
 # 复习进度云端同步（Mac / iPad）
 
-通过 **邮箱 + 可选同步码** 把复习进度存到 Supabase，多台设备打开同一页面即可拉取。
+**只需填邮箱**：进度按邮箱在浏览器内哈希后存云端，换邮箱即切换账号；本机改动约 2 秒自动上传，打开页面时自动与云端对齐。
 
-## 一次性配置（约 10 分钟）
+## 一次性配置（约 5 分钟，只需做一次）
 
-### 1. 创建 Supabase 项目
+### 推荐：Cloudflare Worker（免费）
 
-1. 打开 [https://supabase.com](https://supabase.com) 注册并新建项目（免费即可）。
-2. 进入 **Project Settings → API**，记下：
-   - **Project URL**（形如 `https://xxxx.supabase.co`）
-   - **anon public** key
+```bash
+cd 语法复习/cloudflare-worker
+npx wrangler kv namespace create SYNC_KV
+# 把返回的 id 填入 wrangler.toml 的 kv_namespaces
+npx wrangler deploy
+```
 
-### 2. 建表
+记下部署地址（如 `https://grammar-review-sync.xxx.workers.dev`），在项目根目录执行：
 
-在 Supabase **SQL Editor** 执行：
+```bash
+.venv/bin/python 语法复习/enable_cloud_sync.py --http https://grammar-review-sync.xxx.workers.dev
+```
+
+脚本会写入 `sync_config.builtin.js` 并更新 `index.html`（无需 OCR 依赖；有上级 `grammar_index.json` 时会尝试完整重建）。
+
+非交互也可：
+
+```bash
+.venv/bin/python 语法复习/enable_cloud_sync.py --http "https://xxx.workers.dev"
+# 或 Supabase：
+.venv/bin/python 语法复习/enable_cloud_sync.py --supabase-url "https://xxxx.supabase.co" --supabase-key "eyJ..."
+```
+
+### 备选：Supabase
+
+1. [supabase.com](https://supabase.com) 新建项目，记下 Project URL 与 **anon** key。
+2. SQL Editor 执行：
 
 ```sql
 create table if not exists grammar_review_sync (
@@ -22,51 +41,37 @@ create table if not exists grammar_review_sync (
   payload jsonb not null default '{}'::jsonb,
   updated_at timestamptz not null default now()
 );
-
 alter table grammar_review_sync enable row level security;
-
 create policy "grammar_sync_anon_all"
-  on grammar_review_sync for all
-  using (true) with check (true);
+  on grammar_review_sync for all using (true) with check (true);
 ```
 
-说明：`account_id` 由邮箱（+ 同步码）在浏览器内 SHA-256 生成，不存明文密码。任何人猜到账号 ID 理论上可读写，请务必设置 **同步码**。
+3. `python 语法复习/enable_cloud_sync.py` 选 Supabase 并粘贴 URL / key。
 
-### 3. 本地配置文件
+### 环境变量（可选，不写入 HTML）
 
-```bash
-cd 语法复习
-cp sync_config.example.js sync_config.js
+在 `语法复习/.env` 中：
+
+```
+GRAMMAR_SYNC_BASE_URL=https://xxx.workers.dev
 ```
 
-编辑 `sync_config.js`，填入 URL 与 anonKey。
+或 `SUPABASE_URL` + `SUPABASE_ANON_KEY`，然后重建 HTML。
 
-### 4. 重新生成 HTML（会把配置写进页面，便于 `file://` 打开）
+## 日常使用
 
-```bash
-cd ..
-.venv/bin/python 语法复习/build_grammar_review_html.py
-```
-
-或保持 `sync_config.js` 与 `N1N2_语法复习.html` 同目录，用本地服务器打开。
-
-## 使用
-
-1. 工具栏 **云端同步** 区填写 **邮箱**（建议再加 **同步码**，防他人撞库）。
-2. **保存到云端**：上传当前进度。
-3. **从云端拉取**：下载并覆盖本机（云端较新时）。
-4. 勾选 **自动同步**：本地有变动约 2 秒后自动上传。
-5. 打开页面时：若云端比本机新，会自动拉取一次。
-
-Mac 与 iPad 使用 **相同邮箱与同步码** 即可。
+1. 打开 **`语法复习/index.html`**（`file://` 即可）。
+2. 工具栏 **同步邮箱** 填写你的邮箱（Mac 与 iPad 用同一邮箱）。
+3. 改邮箱后按 **Enter** 或失焦，会自动拉取该邮箱的云端进度并上传本机。
+4. **立即同步**：手动对齐一次。
+5. 复习打分、遍次、断点等变更会自动上传，无需再点保存。
 
 ## 同步内容
 
-- 三遍复习记录（每遍熟悉/不熟）
-- 上次学到的词条与遍次
-- 当前遍次、乱序偏好
+- 三遍复习（每遍熟悉/不熟）
+- 上次词条与遍次、当前遍次、乱序偏好
 
-## 隐私
+## 隐私说明
 
-- 数据存在你的 Supabase 项目，不经过第三方服务器。
-- `sync_config.js` 含 anon key，请勿公开仓库；已加入 `.gitignore` 示例。
+- 云端只存 **邮箱的 SHA-256 哈希** 作账号 ID，不存明文邮箱（Supabase 仅存脱敏 `email_hint`）。
+- `sync_config.builtin.js` / `sync_config.js` 含接口地址或 anon key，请勿提交到公开仓库；可加入 `.gitignore`。

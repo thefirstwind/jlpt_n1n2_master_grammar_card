@@ -11,18 +11,20 @@ from pathlib import Path
 
 REVIEW_DIR = Path(__file__).resolve().parent
 BASE = REVIEW_DIR.parent
-if str(BASE) not in sys.path:
-    sys.path.insert(0, str(BASE))
+if str(REVIEW_DIR) not in sys.path:
+    sys.path.insert(0, str(REVIEW_DIR))
 
-from build_grammar_index import gojuon_sort_key
+from gojuon_sort import gojuon_sort_key
 
-OUT_HTML = REVIEW_DIR / "N1N2_语法复习.html"
+OUT_HTML = REVIEW_DIR / "index.html"
 IMPORTANCE_JSON = BASE / "jlpt_grammar_importance.json"
 IMPORTANCE_FALLBACK = BASE / "n1_grammar_importance.json"
 UI_CSS = REVIEW_DIR / "grammar_review_ui.css"
 UI_JS = REVIEW_DIR / "grammar_review_ui.js"
 SYNC_JS = REVIEW_DIR / "grammar_review_sync.js"
 SYNC_CONFIG = REVIEW_DIR / "sync_config.js"
+SYNC_BUILTIN = REVIEW_DIR / "sync_config.builtin.js"
+SYNC_ENV = REVIEW_DIR / ".env"
 
 SPAN_PAT = re.compile(r'^<span id="([a-z0-9\-]+)"></span>\s*$')
 H4_PAT = re.compile(r'^<h4 id="([a-z0-9\-]+)">(.+)</h4>\s*$')
@@ -387,6 +389,41 @@ def cards_html(
     return "\n".join(parts)
 
 
+def _load_dotenv_simple(path: Path) -> dict[str, str]:
+    env: dict[str, str] = {}
+    if not path.exists():
+        return env
+    for line in path.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        k, _, v = line.partition("=")
+        env[k.strip()] = v.strip().strip('"').strip("'")
+    return env
+
+
+def _sync_config_js_content() -> str:
+    for path in (SYNC_BUILTIN, SYNC_CONFIG):
+        if path.exists():
+            return path.read_text(encoding="utf-8")
+    env = _load_dotenv_simple(SYNC_ENV)
+    url = env.get("SUPABASE_URL", "").strip()
+    key = env.get("SUPABASE_ANON_KEY", "").strip()
+    if url and key:
+        cfg = {
+            "type": "supabase",
+            "url": url.rstrip("/"),
+            "anonKey": key,
+            "table": env.get("GRAMMAR_SYNC_TABLE", "grammar_review_sync"),
+        }
+        return "window.GRAMMAR_SYNC_CONFIG = " + json.dumps(cfg, ensure_ascii=False) + ";\n"
+    base = env.get("GRAMMAR_SYNC_BASE_URL", "").strip()
+    if base:
+        cfg = {"type": "http", "baseUrl": base.rstrip("/")}
+        return "window.GRAMMAR_SYNC_CONFIG = " + json.dumps(cfg, ensure_ascii=False) + ";\n"
+    return "window.GRAMMAR_SYNC_CONFIG = null;\n"
+
+
 def build_html(
     points: list[dict],
     bodies: dict[str, dict[str, str]],
@@ -425,11 +462,7 @@ def build_html(
     ui_css = UI_CSS.read_text(encoding="utf-8") if UI_CSS.exists() else ""
     ui_js = UI_JS.read_text(encoding="utf-8") if UI_JS.exists() else ""
     sync_js = SYNC_JS.read_text(encoding="utf-8") if SYNC_JS.exists() else ""
-    sync_config_js = (
-        SYNC_CONFIG.read_text(encoding="utf-8")
-        if SYNC_CONFIG.exists()
-        else 'window.GRAMMAR_SYNC_CONFIG = null; /* 复制 sync_config.example.js 为 sync_config.js */'
-    )
+    sync_config_js = _sync_config_js_content()
 
     return f"""<!DOCTYPE html>
 <html lang="zh-CN">
@@ -687,12 +720,9 @@ a.go:hover {{ text-decoration: underline; }}
     </label>
   </div>
   <div class="sync-toolbar" id="sync-toolbar" hidden>
-    <span class="sync-toolbar-label">云端同步</span>
-    <input type="email" id="sync-email" class="sync-input" placeholder="邮箱" autocomplete="email">
-    <input type="password" id="sync-code" class="sync-input sync-code" placeholder="同步码（建议设置）" autocomplete="current-password">
-    <button type="button" class="filter-btn" id="sync-push">保存到云端</button>
-    <button type="button" class="filter-btn" id="sync-pull">从云端拉取</button>
-    <label class="sync-auto-toggle"><input type="checkbox" id="sync-auto" checked> 自动同步</label>
+    <span class="sync-toolbar-label">同步邮箱</span>
+    <input type="email" id="sync-email" class="sync-input" placeholder="填写后 Mac / iPad 自动同步" autocomplete="email">
+    <button type="button" class="filter-btn" id="sync-now">立即同步</button>
     <span id="sync-status" class="sync-status"></span>
   </div>
 </header>

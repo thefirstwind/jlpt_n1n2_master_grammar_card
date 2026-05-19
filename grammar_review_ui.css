@@ -103,15 +103,7 @@
   font-size: 0.82rem;
   min-width: 8rem;
 }
-.sync-input.sync-code { min-width: 6.5rem; max-width: 8rem; }
-.sync-auto-toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  cursor: pointer;
-  user-select: none;
-  white-space: nowrap;
-}
+#sync-now { white-space: nowrap; }
 .sync-status {
   color: var(--muted);
   font-size: 0.78rem;
