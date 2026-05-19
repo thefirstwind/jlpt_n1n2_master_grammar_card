@@ -3662,10 +3662,10 @@ window.GRAMMAR_SYNC_CONFIG = {"type": "http", "baseUrl": "https://jlptn1n2master
     }
   }
 
-  function saveStore() {
+  function saveStore(opts) {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
-      if (typeof window.__grammarReviewScheduleSync === "function") {
+      if (!opts?.skipSync && typeof window.__grammarReviewScheduleSync === "function") {
         window.__grammarReviewScheduleSync();
       }
     } catch (e) {
@@ -4145,7 +4145,7 @@ window.GRAMMAR_SYNC_CONFIG = {"type": "http", "baseUrl": "https://jlptn1n2master
     }
   }
 
-  function clearCurrentPass() {
+  async function clearCurrentPass() {
     if (
       !confirm(
         `清除全部语法在第${currentPass}遍的复习记录？\n共 238 条，其它遍次（第${currentPass === 1 ? "2、3" : currentPass === 2 ? "1、3" : "1、2"}遍）保留。`
@@ -4154,6 +4154,7 @@ window.GRAMMAR_SYNC_CONFIG = {"type": "http", "baseUrl": "https://jlptn1n2master
       return;
     }
     const i = currentPass - 1;
+    const ts = Date.now();
     for (const aid of Object.keys(store.cards)) {
       const prev = store.cards[aid];
       if (!prev) continue;
@@ -4162,7 +4163,7 @@ window.GRAMMAR_SYNC_CONFIG = {"type": "http", "baseUrl": "https://jlptn1n2master
       const hasAny = marks.some((m) => m.done);
       if (hasAny) {
         store.cards[aid] = {
-          updated: Date.now(),
+          updated: ts,
           reviews: prev.reviews,
           passMarks: marks,
         };
@@ -4170,11 +4171,14 @@ window.GRAMMAR_SYNC_CONFIG = {"type": "http", "baseUrl": "https://jlptn1n2master
         delete store.cards[aid];
       }
     }
-    saveStore();
+    saveStore({ skipSync: true });
     preserveIndexScroll(() => refreshAllUI());
+    if (typeof window.__grammarReviewPushOnly === "function") {
+      await window.__grammarReviewPushOnly(true);
+    }
   }
 
-  function clearCurrentCardPass() {
+  async function clearCurrentCardPass() {
     const aid = deck[deckIndex];
     if (!aid) return;
     if (
@@ -4198,9 +4202,12 @@ window.GRAMMAR_SYNC_CONFIG = {"type": "http", "baseUrl": "https://jlptn1n2master
     } else {
       delete store.cards[aid];
     }
-    saveStore();
+    saveStore({ skipSync: true });
     refreshAllUI(aid);
     showCard(aid);
+    if (typeof window.__grammarReviewPushOnly === "function") {
+      await window.__grammarReviewPushOnly(true);
+    }
   }
 
   loadShufflePref();
@@ -4324,6 +4331,7 @@ window.GRAMMAR_SYNC_CONFIG = {"type": "http", "baseUrl": "https://jlptn1n2master
 
   let debounceTimer = null;
   let syncing = false;
+  let mergeGeneration = 0;
 
   function configured() {
     if (!CFG) return false;
@@ -4426,17 +4434,25 @@ window.GRAMMAR_SYNC_CONFIG = {"type": "http", "baseUrl": "https://jlptn1n2master
     return Object.keys(data.cards || {}).length;
   }
 
-  function mergeReviewRaw(localStr, cloudStr) {
+  function mergeReviewRaw(localStr, cloudStr, opts) {
     const local = parseReviewRaw(localStr);
     const cloud = parseReviewRaw(cloudStr);
+    const localWins = !!(opts && opts.localWins);
     const cards = {};
     const aids = new Set([...Object.keys(local.cards || {}), ...Object.keys(cloud.cards || {})]);
     for (const aid of aids) {
       const l = local.cards[aid];
       const c = cloud.cards[aid];
-      if (!l) cards[aid] = c;
-      else if (!c) cards[aid] = l;
-      else cards[aid] = (l.updated || 0) >= (c.updated || 0) ? l : c;
+      if (!l && !c) continue;
+      if (!l) {
+        if (!localWins) cards[aid] = c;
+        continue;
+      }
+      if (!c) {
+        cards[aid] = l;
+        continue;
+      }
+      cards[aid] = (l.updated || 0) >= (c.updated || 0) ? l : c;
     }
     return JSON.stringify({ v: 3, cards });
   }
@@ -4458,11 +4474,14 @@ window.GRAMMAR_SYNC_CONFIG = {"type": "http", "baseUrl": "https://jlptn1n2master
     if (!local) return cloud;
     const localCards = reviewProgressCount(local.review);
     const cloudCards = reviewProgressCount(cloud.review);
-    const savedAt = Math.max(local.savedAt || 0, cloud.savedAt || 0);
+    const localSaved = local.savedAt || 0;
+    const cloudSaved = cloud.savedAt || 0;
+    const localWins = localSaved >= cloudSaved;
+    const savedAt = Math.max(localSaved, cloudSaved);
     return {
       v: 1,
       savedAt,
-      review: mergeReviewRaw(local.review, cloud.review),
+      review: mergeReviewRaw(local.review, cloud.review, { localWins }),
       lastPlace: pickNewerPlace(local.lastPlace, cloud.lastPlace),
       currentPass:
         localCards >= cloudCards ? local.currentPass ?? cloud.currentPass : cloud.currentPass ?? local.currentPass,
@@ -4629,6 +4648,36 @@ window.GRAMMAR_SYNC_CONFIG = {"type": "http", "baseUrl": "https://jlptn1n2master
     }
   }
 
+  function cancelScheduledSync() {
+    clearTimeout(debounceTimer);
+    debounceTimer = null;
+  }
+
+  function bumpMergeGeneration() {
+    mergeGeneration += 1;
+  }
+
+  function waitForSyncing() {
+    if (!syncing) return Promise.resolve();
+    return new Promise((resolve) => {
+      const tick = () => {
+        if (!syncing) resolve();
+        else setTimeout(tick, 50);
+      };
+      tick();
+    });
+  }
+
+  async function pushOnly(silent) {
+    if (!configured()) return false;
+    const email = readEmail();
+    if (!email) return false;
+    cancelScheduledSync();
+    bumpMergeGeneration();
+    await waitForSyncing();
+    return push(silent);
+  }
+
   async function syncMerge(silent) {
     if (!configured()) return false;
     const email = readEmail();
@@ -4636,6 +4685,7 @@ window.GRAMMAR_SYNC_CONFIG = {"type": "http", "baseUrl": "https://jlptn1n2master
     if (syncing) return false;
     saveEmail(email);
     const id = await accountId(email);
+    const genAtStart = mergeGeneration;
     syncing = true;
     if (!silent) setStatus("同步中…");
     try {
@@ -4647,8 +4697,14 @@ window.GRAMMAR_SYNC_CONFIG = {"type": "http", "baseUrl": "https://jlptn1n2master
         if (!silent) setStatus(`拉取失败：${formatFetchError(e)}`, true);
         return false;
       }
+      if (genAtStart !== mergeGeneration) {
+        return pushOnly(silent);
+      }
       const merged = mergePayloads(local, cloud);
       merged.savedAt = Date.now();
+      if (genAtStart !== mergeGeneration) {
+        return pushOnly(silent);
+      }
       applyPayload(merged, merged.savedAt);
       if (CFG.type === "http") {
         await pushHttp(id, merged);
@@ -4750,6 +4806,7 @@ window.GRAMMAR_SYNC_CONFIG = {"type": "http", "baseUrl": "https://jlptn1n2master
   }
 
   window.__grammarReviewScheduleSync = schedulePush;
+  window.__grammarReviewPushOnly = pushOnly;
   window.__grammarReviewSyncPush = () => push(false);
   window.__grammarReviewSyncPull = () => syncMerge(false);
   window.__grammarReviewSyncMerge = syncMerge;

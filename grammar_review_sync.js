@@ -14,6 +14,7 @@
 
   let debounceTimer = null;
   let syncing = false;
+  let mergeGeneration = 0;
 
   function configured() {
     if (!CFG) return false;
@@ -116,17 +117,25 @@
     return Object.keys(data.cards || {}).length;
   }
 
-  function mergeReviewRaw(localStr, cloudStr) {
+  function mergeReviewRaw(localStr, cloudStr, opts) {
     const local = parseReviewRaw(localStr);
     const cloud = parseReviewRaw(cloudStr);
+    const localWins = !!(opts && opts.localWins);
     const cards = {};
     const aids = new Set([...Object.keys(local.cards || {}), ...Object.keys(cloud.cards || {})]);
     for (const aid of aids) {
       const l = local.cards[aid];
       const c = cloud.cards[aid];
-      if (!l) cards[aid] = c;
-      else if (!c) cards[aid] = l;
-      else cards[aid] = (l.updated || 0) >= (c.updated || 0) ? l : c;
+      if (!l && !c) continue;
+      if (!l) {
+        if (!localWins) cards[aid] = c;
+        continue;
+      }
+      if (!c) {
+        cards[aid] = l;
+        continue;
+      }
+      cards[aid] = (l.updated || 0) >= (c.updated || 0) ? l : c;
     }
     return JSON.stringify({ v: 3, cards });
   }
@@ -148,11 +157,14 @@
     if (!local) return cloud;
     const localCards = reviewProgressCount(local.review);
     const cloudCards = reviewProgressCount(cloud.review);
-    const savedAt = Math.max(local.savedAt || 0, cloud.savedAt || 0);
+    const localSaved = local.savedAt || 0;
+    const cloudSaved = cloud.savedAt || 0;
+    const localWins = localSaved >= cloudSaved;
+    const savedAt = Math.max(localSaved, cloudSaved);
     return {
       v: 1,
       savedAt,
-      review: mergeReviewRaw(local.review, cloud.review),
+      review: mergeReviewRaw(local.review, cloud.review, { localWins }),
       lastPlace: pickNewerPlace(local.lastPlace, cloud.lastPlace),
       currentPass:
         localCards >= cloudCards ? local.currentPass ?? cloud.currentPass : cloud.currentPass ?? local.currentPass,
@@ -319,6 +331,36 @@
     }
   }
 
+  function cancelScheduledSync() {
+    clearTimeout(debounceTimer);
+    debounceTimer = null;
+  }
+
+  function bumpMergeGeneration() {
+    mergeGeneration += 1;
+  }
+
+  function waitForSyncing() {
+    if (!syncing) return Promise.resolve();
+    return new Promise((resolve) => {
+      const tick = () => {
+        if (!syncing) resolve();
+        else setTimeout(tick, 50);
+      };
+      tick();
+    });
+  }
+
+  async function pushOnly(silent) {
+    if (!configured()) return false;
+    const email = readEmail();
+    if (!email) return false;
+    cancelScheduledSync();
+    bumpMergeGeneration();
+    await waitForSyncing();
+    return push(silent);
+  }
+
   async function syncMerge(silent) {
     if (!configured()) return false;
     const email = readEmail();
@@ -326,6 +368,7 @@
     if (syncing) return false;
     saveEmail(email);
     const id = await accountId(email);
+    const genAtStart = mergeGeneration;
     syncing = true;
     if (!silent) setStatus("同步中…");
     try {
@@ -337,8 +380,14 @@
         if (!silent) setStatus(`拉取失败：${formatFetchError(e)}`, true);
         return false;
       }
+      if (genAtStart !== mergeGeneration) {
+        return pushOnly(silent);
+      }
       const merged = mergePayloads(local, cloud);
       merged.savedAt = Date.now();
+      if (genAtStart !== mergeGeneration) {
+        return pushOnly(silent);
+      }
       applyPayload(merged, merged.savedAt);
       if (CFG.type === "http") {
         await pushHttp(id, merged);
@@ -440,6 +489,7 @@
   }
 
   window.__grammarReviewScheduleSync = schedulePush;
+  window.__grammarReviewPushOnly = pushOnly;
   window.__grammarReviewSyncPush = () => push(false);
   window.__grammarReviewSyncPull = () => syncMerge(false);
   window.__grammarReviewSyncMerge = syncMerge;

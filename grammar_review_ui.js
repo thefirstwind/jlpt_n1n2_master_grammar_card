@@ -120,10 +120,10 @@
     }
   }
 
-  function saveStore() {
+  function saveStore(opts) {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
-      if (typeof window.__grammarReviewScheduleSync === "function") {
+      if (!opts?.skipSync && typeof window.__grammarReviewScheduleSync === "function") {
         window.__grammarReviewScheduleSync();
       }
     } catch (e) {
@@ -603,7 +603,7 @@
     }
   }
 
-  function clearCurrentPass() {
+  async function clearCurrentPass() {
     if (
       !confirm(
         `清除全部语法在第${currentPass}遍的复习记录？\n共 238 条，其它遍次（第${currentPass === 1 ? "2、3" : currentPass === 2 ? "1、3" : "1、2"}遍）保留。`
@@ -612,6 +612,7 @@
       return;
     }
     const i = currentPass - 1;
+    const ts = Date.now();
     for (const aid of Object.keys(store.cards)) {
       const prev = store.cards[aid];
       if (!prev) continue;
@@ -620,7 +621,7 @@
       const hasAny = marks.some((m) => m.done);
       if (hasAny) {
         store.cards[aid] = {
-          updated: Date.now(),
+          updated: ts,
           reviews: prev.reviews,
           passMarks: marks,
         };
@@ -628,11 +629,14 @@
         delete store.cards[aid];
       }
     }
-    saveStore();
+    saveStore({ skipSync: true });
     preserveIndexScroll(() => refreshAllUI());
+    if (typeof window.__grammarReviewPushOnly === "function") {
+      await window.__grammarReviewPushOnly(true);
+    }
   }
 
-  function clearCurrentCardPass() {
+  async function clearCurrentCardPass() {
     const aid = deck[deckIndex];
     if (!aid) return;
     if (
@@ -656,9 +660,12 @@
     } else {
       delete store.cards[aid];
     }
-    saveStore();
+    saveStore({ skipSync: true });
     refreshAllUI(aid);
     showCard(aid);
+    if (typeof window.__grammarReviewPushOnly === "function") {
+      await window.__grammarReviewPushOnly(true);
+    }
   }
 
   loadShufflePref();
