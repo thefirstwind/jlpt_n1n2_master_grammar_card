@@ -3,6 +3,7 @@
   const STORAGE_KEY = "shinkanzen_grammar_review_v2";
   const STORAGE_KEY_LEGACY = "shinkanzen_grammar_review_v1";
   const SHUFFLE_PREF_KEY = "shinkanzen_grammar_shuffle_v2";
+  const INDEX_SORT_KEY = "shinkanzen_grammar_index_sort_v1";
   const PASS_PREF_KEY = "shinkanzen_grammar_current_pass";
   const LAST_PLACE_KEY = "shinkanzen_grammar_last_place";
   const TOOLBAR_EXPAND_KEY = "shinkanzen_grammar_toolbar_expanded";
@@ -21,6 +22,7 @@
   let currentPass = 1;
   let lastViewedAid = null;
   let reviewFilter = "ALL";
+  let indexSortMode = "gojuon";
   /** @type {{ aid: string, index: number, snapshot: object | null }[]} */
   let reviewHistory = [];
 
@@ -348,16 +350,16 @@
   function refreshCardBar(aid) {
     const card = document.getElementById(aid);
     if (!card) return;
-    const bar = card.querySelector(".review-bar");
-    if (!bar) return;
     const st = getStatus(aid, currentPass);
-    bar.querySelectorAll(".rv-btn").forEach((btn) => {
-      btn.classList.remove("active-hard", "active-good");
-      if (btn.dataset.review === st) {
-        btn.classList.add(st === STATUS.HARD ? "active-hard" : "active-good");
-      } else if (st === STATUS.LEARNING && btn.dataset.review === "hard") {
-        btn.classList.add("active-hard");
-      }
+    card.querySelectorAll(".review-bar").forEach((bar) => {
+      bar.querySelectorAll(".rv-btn").forEach((btn) => {
+        btn.classList.remove("active-hard", "active-good");
+        if (btn.dataset.review === st) {
+          btn.classList.add(st === STATUS.HARD ? "active-hard" : "active-good");
+        } else if (st === STATUS.LEARNING && btn.dataset.review === "hard") {
+          btn.classList.add("active-hard");
+        }
+      });
     });
   }
 
@@ -430,7 +432,11 @@
     frontPattern.textContent = pattern;
     frontMeta.textContent = `${lvl} · #${seq || "—"} · 正在第${currentPass}遍（${curSt}）· 总${done}/${TARGET_PASSES}遍${hist ? " · " + hist : ""}`;
     const body = card ? card.querySelector(".body") : null;
-    backBody.innerHTML = body ? body.innerHTML : '<p class="muted">（无正文）</p>';
+    const exercises = card ? card.querySelector(".exercises") : null;
+    let backHtml = body ? body.innerHTML : '<p class="muted">（无正文）</p>';
+    if (exercises) backHtml += exercises.outerHTML;
+    backBody.innerHTML = backHtml;
+    hydrateExerciseAnswers(backBody, aid);
     const mode = deckShuffled ? " · 乱序" : "";
     progressEl.textContent = `${deckIndex + 1} / ${deck.length}${mode}`;
     updateUndoButton();
@@ -699,8 +705,71 @@
     setToolbarExpanded(document.body.classList.contains("toolbar-collapsed"));
   });
 
+  function updateIndexSortButton() {
+    const btn = document.getElementById("btn-index-sort");
+    const title = document.getElementById("index-title");
+    if (btn) {
+      btn.textContent = indexSortMode === "gojuon" ? "乱序" : "五十音";
+      btn.title =
+        indexSortMode === "gojuon" ? "切换为乱序索引" : "切换回五十音顺序";
+    }
+    if (title) {
+      title.textContent = indexSortMode === "gojuon" ? "五十音索引" : "乱序索引";
+    }
+  }
+
+  function applyIndexSort(mode, { shuffle = false } = {}) {
+    const tbody = document.querySelector("#idx tbody");
+    if (!tbody) return;
+    const trs = [...tbody.querySelectorAll("tr")];
+    if (mode === "gojuon") {
+      trs.sort(
+        (a, b) =>
+          parseInt(a.dataset.gidx || "0", 10) - parseInt(b.dataset.gidx || "0", 10)
+      );
+    } else if (shuffle) {
+      for (let i = trs.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [trs[i], trs[j]] = [trs[j], trs[i]];
+      }
+    }
+    trs.forEach((tr) => tbody.appendChild(tr));
+    indexSortMode = mode;
+    updateIndexSortButton();
+    try {
+      localStorage.setItem(INDEX_SORT_KEY, mode);
+    } catch {
+      /* ignore */
+    }
+    if (typeof window.__applyGrammarFilter === "function") {
+      window.__applyGrammarFilter();
+    }
+  }
+
+  function loadIndexSortPref() {
+    try {
+      if (localStorage.getItem(INDEX_SORT_KEY) === "random") {
+        applyIndexSort("random", { shuffle: true });
+        return;
+      }
+    } catch {
+      /* ignore */
+    }
+    indexSortMode = "gojuon";
+    updateIndexSortButton();
+  }
+
+  document.getElementById("btn-index-sort")?.addEventListener("click", () => {
+    if (indexSortMode === "gojuon") {
+      applyIndexSort("random", { shuffle: true });
+    } else {
+      applyIndexSort("gojuon");
+    }
+  });
+
   loadShufflePref();
   loadPassPref();
+  loadIndexSortPref();
   updateClearButtonsLabel();
 
   shuffleCheckbox?.addEventListener("change", () => {
@@ -728,7 +797,7 @@
   document.getElementById("rv-undo")?.addEventListener("click", undoReview);
   document.getElementById("rv-flip")?.addEventListener("click", toggleFlip);
   document.querySelector("#review-overlay .flip-card")?.addEventListener("click", (e) => {
-    if (e.target.closest("button")) return;
+    if (e.target.closest("button") || e.target.closest(".options li[data-opt]")) return;
     toggleFlip();
   });
   document.getElementById("rv-hard")?.addEventListener("click", () => rate(STATUS.HARD));
@@ -746,7 +815,49 @@
     });
   });
 
+  function hydrateExerciseAnswers(root, aid) {
+    const map = window.GRAMMAR_EXERCISE_ANSWERS;
+    if (!map || !aid || !map[aid]) return;
+    const answers = map[aid];
+    const scope = root && root.querySelectorAll ? root : document;
+    scope.querySelectorAll(".exercise-item[data-q]").forEach((item) => {
+      const q = item.dataset.q;
+      if (q && answers[q]) item.dataset.answer = String(answers[q]).toLowerCase();
+    });
+  }
+
+  function handleExercisePick(li) {
+    const item = li.closest(".exercise-item");
+    if (!item || item.classList.contains("answered")) return;
+    const picked = (li.dataset.opt || "").toLowerCase();
+    const correct = (item.dataset.answer || "").toLowerCase();
+    item.classList.add("answered");
+    if (!correct) {
+      li.classList.add("ex-picked");
+      return;
+    }
+    if (picked === correct) {
+      li.classList.add("ex-correct");
+    } else {
+      li.classList.add("ex-wrong");
+      const show = item.querySelector(`.options [data-opt="${correct}"]`);
+      if (show) show.classList.add("ex-correct");
+    }
+  }
+
+  function onExerciseOptionEvent(e) {
+    const optLi = e.target.closest(".exercises .options li[data-opt]");
+    if (!optLi) return;
+    e.preventDefault();
+    e.stopPropagation();
+    handleExercisePick(optLi);
+  }
+
   document.addEventListener("click", (e) => {
+    if (e.target.closest(".exercises .options li[data-opt]")) {
+      onExerciseOptionEvent(e);
+      return;
+    }
     const btn = e.target.closest(".rv-btn[data-review]");
     if (!btn) return;
     const bar = btn.closest(".review-bar");
@@ -797,6 +908,10 @@
       window.__grammarGoTo(id, { resume: true });
     }
   }
+
+  document.querySelectorAll(".grammar-card[id]").forEach((card) => {
+    hydrateExerciseAnswers(card, card.id);
+  });
 
   refreshAllUI();
   setTimeout(resumeOnLoad, 80);

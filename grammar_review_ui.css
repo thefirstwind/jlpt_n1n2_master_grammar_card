@@ -236,6 +236,48 @@
   gap: 0.35rem;
   flex-wrap: wrap;
 }
+.grammar-card .review-bar-bottom {
+  float: none;
+  clear: both;
+  justify-content: flex-end;
+  margin: 1rem 0 0;
+  padding-top: 0.85rem;
+  border-top: 1px dashed var(--border);
+}
+.grammar-card .review-bar-bottom .rv-btn {
+  padding: 0.38rem 0.9rem;
+  font-size: 0.88rem;
+}
+.index-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  padding: 0.55rem 1rem;
+  border-bottom: 1px solid var(--border);
+  background: #faf9f7;
+}
+.index-head h2 {
+  margin: 0;
+  font-size: 0.88rem;
+  flex: 1;
+  min-width: 0;
+}
+.index-sort-btn {
+  flex-shrink: 0;
+  padding: 0.22rem 0.55rem;
+  font-size: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--card);
+  color: var(--muted);
+  cursor: pointer;
+}
+.index-sort-btn:hover {
+  color: var(--text);
+  border-color: #c5c9d2;
+}
 .rv-btn {
   padding: 0.2rem 0.55rem;
   font-size: 0.78rem;
@@ -334,9 +376,11 @@ body.review-open .toolbar {
 .flip-front {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  min-height: min(28dvh, 220px);
-  padding: 0.25rem 0;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
+  min-height: min(54dvh, 420px);
+  padding: clamp(3rem, 20vh, 7rem) 0.5rem 1.25rem;
 }
 .flip-back {
   display: none;
@@ -350,21 +394,27 @@ body.review-open .toolbar {
   display: block;
 }
 .review-front-pattern {
-  font-size: clamp(1.75rem, 4.5vw, 2.5rem);
+  font-size: clamp(3.75rem, 14vw, 7.5rem);
   font-weight: 700;
-  margin: 0.75rem 0 1rem;
-  line-height: 1.35;
+  margin: clamp(1.5rem, 9vh, 3.5rem) 0 0;
+  line-height: 1.2;
   letter-spacing: 0.02em;
+  width: 100%;
+  text-align: center;
 }
 .review-meta {
   font-size: 0.95rem;
   color: var(--muted);
-  margin-bottom: 0.5rem;
+  margin: 0;
+  width: 100%;
+  text-align: center;
+  flex-shrink: 0;
 }
 .review-hint {
   font-size: 0.85rem;
   color: var(--muted);
-  margin-top: 0.75rem;
+  margin-top: auto;
+  padding-top: 0.75rem;
 }
 @media (orientation: landscape) and (max-height: 820px),
   (max-height: 520px) {
@@ -400,10 +450,11 @@ body.review-open .toolbar {
   .flip-front {
     min-height: 0;
     justify-content: flex-start;
+    padding-top: clamp(1.5rem, 10vh, 3rem);
   }
   .review-front-pattern {
-    font-size: clamp(1.1rem, 4.5vw, 1.65rem);
-    margin: 0.25rem 0 0.35rem;
+    font-size: clamp(2.1rem, 8.5vw, 3.25rem);
+    margin: clamp(0.85rem, 6vh, 1.75rem) 0 0;
   }
   .review-meta {
     font-size: 0.78rem;
@@ -458,6 +509,62 @@ body.review-open .toolbar {
   font-size: 1.05rem;
 }
 .flip-back .example { font-size: 1.02rem; }
+.exercise-answer-ref {
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin: 0 0 0.65rem;
+}
+.title-sub .title-ex-missing {
+  color: #c2410c;
+  font-weight: 600;
+}
+.ex-ans-missing {
+  display: inline-block;
+  margin-left: 0.45rem;
+  padding: 0.12rem 0.42rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #9a3412;
+  background: #ffedd5;
+  border: 1px solid #fdba74;
+  border-radius: 4px;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+.exercise-item.ex-item-no-answer {
+  border-left: 3px solid #fdba74;
+  padding-left: 0.4rem;
+  margin-left: -0.05rem;
+}
+.grammar-card .options li[data-opt],
+.flip-back .options li[data-opt] {
+  cursor: pointer;
+  border-radius: 6px;
+  padding: 0.28rem 0.35rem;
+  margin: 0.2rem 0;
+  transition: background 0.12s ease;
+}
+.grammar-card .options li[data-opt]:hover,
+.flip-back .options li[data-opt]:hover {
+  background: #f0ede6;
+}
+.exercise-item.answered .options li[data-opt] {
+  pointer-events: none;
+  cursor: default;
+}
+.exercise-item .options li.ex-correct {
+  background: #dcfce7;
+  border: 1px solid #86efac;
+}
+.exercise-item .options li.ex-wrong {
+  background: #fee2e2;
+  border: 1px solid #fca5a5;
+}
+.exercise-item .options li.ex-picked {
+  background: #e0e7ff;
+  border: 1px solid #a5b4fc;
+}
 .review-actions {
   display: grid;
   grid-template-columns: 1fr 1fr;

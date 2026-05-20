@@ -16,7 +16,14 @@ if str(REVIEW_DIR) not in sys.path:
 
 from gojuon_sort import gojuon_sort_key
 
+if str(BASE) not in sys.path:
+    sys.path.insert(0, str(BASE))
+from strip_book_footers import is_footer_line  # noqa: E402
+
 OUT_HTML = REVIEW_DIR / "index.html"
+ANSWERS_JSON = REVIEW_DIR / "grammar_exercise_answers.json"
+EXPERT_ANSWERS_JSON = REVIEW_DIR / "grammar_exercise_answers_expert.json"
+HIRAGANA_RE = re.compile(r"[\u3040-\u30ff]")
 IMPORTANCE_JSON = BASE / "jlpt_grammar_importance.json"
 IMPORTANCE_FALLBACK = BASE / "n1_grammar_importance.json"
 UI_CSS = REVIEW_DIR / "grammar_review_ui.css"
@@ -48,6 +55,8 @@ def skip_in_grammar_body(s: str) -> bool:
     if s.startswith("【復習】"):
         return True
     if re.match(r"^[IVX]+\s+", s):  # I ことがらを説明する☆
+        return True
+    if is_footer_line(s):
         return True
     return False
 
@@ -89,7 +98,32 @@ def split_inline_options(rest: str) -> tuple[str, list[tuple[str, str]]] | None:
     return stem, opts
 
 
-def body_fragment_to_html(text: str) -> str:
+def md_is_n2(md_path: Path) -> bool:
+    return "N2_" in md_path.name
+
+
+def is_pure_chinese_line(line: str) -> bool:
+    s = line.strip()
+    if not s or HIRAGANA_RE.search(s):
+        return False
+    return bool(re.search(r"[\u4e00-\u9fff]", s))
+
+
+def strip_n2_inline_translation(line: str) -> str:
+    """**意味：** 日文。中文说明 → 只保留日文句。"""
+    s = line.strip()
+    if not s.startswith("**"):
+        return line
+    m = re.match(
+        r"^(.*[。．])\s*([\u4e00-\u9fff\u3000\u3010-\u3011\uff01-\uff5e「」『』、，．…]+.*)$",
+        s,
+    )
+    if m and not HIRAGANA_RE.search(m.group(2)):
+        return m.group(1)
+    return line
+
+
+def body_fragment_to_html(text: str, *, strip_cn: bool = False) -> str:
     text = text.strip()
     if not text:
         return ""
@@ -97,6 +131,10 @@ def body_fragment_to_html(text: str) -> str:
     in_ul = False
     for raw in text.splitlines():
         line = raw.rstrip()
+        if strip_cn:
+            if is_pure_chinese_line(line):
+                continue
+            line = strip_n2_inline_translation(line)
         if not line.strip():
             if in_ul:
                 out.append("</ul>")
@@ -130,9 +168,20 @@ def body_fragment_to_html(text: str) -> str:
     return "\n".join(out)
 
 
-def exercise_fragment_to_html(text: str) -> str:
+EX_ANS_MISSING_BADGE = (
+    '<span class="ex-ans-missing" title="尚无标准答案，可选但无法自动判对错">未收录</span>'
+)
+
+
+def exercise_fragment_to_html(
+    text: str, answers: dict[str, str] | None = None
+) -> tuple[str, int, int]:
+    """返回 (html, 题数, 已收录答案题数)。"""
+    answers = answers or {}
     lines = [ln.rstrip() for ln in text.splitlines()]
     items: list[str] = []
+    n_total = 0
+    n_answered = 0
     i = 0
     while i < len(lines):
         s = lines[i].strip()
@@ -146,12 +195,22 @@ def exercise_fragment_to_html(text: str) -> str:
             if split:
                 stem, opts = split
                 opt_html = "".join(
-                    f'<li><span class="opt">{letter}</span> {text}</li>'
+                    f'<li data-opt="{letter}" role="button" tabindex="0">'
+                    f'<span class="opt">{letter}</span> {text}</li>'
                     for letter, text in opts
                 )
+                has_ans = num in answers
+                ans_attr = (
+                    f' data-answer="{html.escape(answers[num])}"' if has_ans else ""
+                )
+                miss_cls = "" if has_ans else " ex-item-no-answer"
+                miss_badge = "" if has_ans else EX_ANS_MISSING_BADGE
+                n_total += 1
+                if has_ans:
+                    n_answered += 1
                 items.append(
-                    '<div class="exercise-item">'
-                    f'<p class="exercise-q"><span class="q-num">{num}</span> {stem}</p>'
+                    f'<div class="exercise-item{miss_cls}" data-q="{num}"{ans_attr}>'
+                    f'<p class="exercise-q"><span class="q-num">{num}</span> {stem}{miss_badge}</p>'
                     f'<ul class="options">{opt_html}</ul></div>'
                 )
                 i += 1
@@ -164,20 +223,28 @@ def exercise_fragment_to_html(text: str) -> str:
                 om = re.match(r"^([a-c])\s+(.*)$", raw, re.DOTALL)
                 if om:
                     opt_lines.append(
-                        f'<li><span class="opt">{om.group(1)}</span> {_inline_md(om.group(2))}</li>'
+                        f'<li data-opt="{om.group(1)}" role="button" tabindex="0">'
+                        f'<span class="opt">{om.group(1)}</span> {_inline_md(om.group(2))}</li>'
                     )
                 else:
                     opt_lines.append(f"<li>{_inline_md(raw)}</li>")
                 i += 1
             opts_block = f'<ul class="options">{"".join(opt_lines)}</ul>' if opt_lines else ""
+            has_ans = num in answers
+            ans_attr = f' data-answer="{html.escape(answers[num])}"' if has_ans else ""
+            miss_cls = "" if has_ans else " ex-item-no-answer"
+            miss_badge = "" if has_ans else EX_ANS_MISSING_BADGE
+            n_total += 1
+            if has_ans:
+                n_answered += 1
             items.append(
-                '<div class="exercise-item">'
-                f'<p class="exercise-q"><span class="q-num">{num}</span> {stem}</p>'
+                f'<div class="exercise-item{miss_cls}" data-q="{num}"{ans_attr}>'
+                f'<p class="exercise-q"><span class="q-num">{num}</span> {stem}{miss_badge}</p>'
                 f"{opts_block}</div>"
             )
             continue
         i += 1
-    return "\n".join(items)
+    return "\n".join(items), n_total, n_answered
 
 
 def extract_bodies(md_path: Path) -> dict[str, dict[str, str]]:
@@ -206,7 +273,10 @@ def extract_bodies(md_path: Path) -> dict[str, dict[str, str]]:
                 continue
             body.append(lines[i])
             i += 1
-        result[aid] = {"title": title, "html": body_fragment_to_html("\n".join(body))}
+        result[aid] = {
+            "title": title,
+            "html": body_fragment_to_html("\n".join(body), strip_cn=md_is_n2(md_path)),
+        }
     return result
 
 
@@ -236,9 +306,11 @@ def extract_exercises(md_path: Path) -> dict[int, str]:
             continue
         if s.startswith("## Page") or s.startswith("![") or s.startswith("### 校对文本"):
             continue
+        if skip_in_grammar_body(s):
+            continue
         by_num[current].append(line)
 
-    return {n: exercise_fragment_to_html("\n".join(chunk)) for n, chunk in by_num.items()}
+    return {n: "\n".join(chunk) for n, chunk in by_num.items()}
 
 
 def is_stub_body(body: dict[str, str]) -> bool:
@@ -257,9 +329,41 @@ def resolve_exercise_key(pt: dict, bodies: dict[str, dict[str, str]]) -> tuple[s
     return pt["md_rel"], pt["grammar_num"]
 
 
+def exercise_answer_key(pt: dict, ex_rel: str, ex_gnum: int) -> str:
+    """答案 JSON 按「练习块【N】」所在课次编号，与 anchor_id 在跨课 stub 时可能不同。"""
+    lm = re.search(r"第(\d+)课", ex_rel)
+    lesson = int(lm.group(1)) if lm else pt["lesson"]
+    return f"{pt['level'].lower()}-l{lesson:02d}-g{ex_gnum:02d}"
+
+
+def answers_for_point(
+    pt: dict,
+    bodies: dict[str, dict[str, str]],
+    exercise_answers: dict[str, dict[str, str]],
+) -> dict[str, str]:
+    ex_rel, ex_gnum = resolve_exercise_key(pt, bodies)
+    ex_key = exercise_answer_key(pt, ex_rel, ex_gnum)
+    return exercise_answers.get(ex_key) or exercise_answers.get(pt["anchor_id"], {})
+
+
 def load_points() -> list[dict]:
     data = json.loads((BASE / "grammar_index.json").read_text(encoding="utf-8"))
     return data["merged"]
+
+
+def load_exercise_answers() -> dict[str, dict[str, str]]:
+    result: dict[str, dict[str, str]] = {}
+    if ANSWERS_JSON.exists():
+        data = json.loads(ANSWERS_JSON.read_text(encoding="utf-8"))
+        for k, v in data.items():
+            result[k] = {str(q): str(a).lower() for q, a in v.items()}
+    if EXPERT_ANSWERS_JSON.exists():
+        expert = json.loads(EXPERT_ANSWERS_JSON.read_text(encoding="utf-8"))
+        for k, v in expert.items():
+            merged = result.get(k, {})
+            merged.update({str(q): str(a).lower() for q, a in v.items()})
+            result[k] = merged
+    return result
 
 
 def load_importance() -> dict[str, dict]:
@@ -338,9 +442,9 @@ def stars_html(stars: int, info: dict | None, level: str) -> str:
     )
 
 
-def review_bar_html(aid: str) -> str:
+def review_bar_html(aid: str, *, bottom: bool = False) -> str:
     return (
-        f'<div class="review-bar" data-aid="{aid}">'
+        f'<div class="{"review-bar review-bar-bottom" if bottom else "review-bar"}" data-aid="{aid}">'
         f'<button type="button" class="rv-btn" data-review="hard" title="不熟悉">不熟</button>'
         f'<button type="button" class="rv-btn" data-review="good" title="熟悉">熟悉</button>'
         "</div>"
@@ -364,10 +468,15 @@ def cards_html(
         body = bodies.get(aid, {})
         title = body.get("title") or html.escape(f"{gnum} {p['pattern']}")
         content = body.get("html") or '<p class="muted">（正文未提取）</p>'
-        ex_html = lesson_exercises.get((p["md_rel"], gnum), "")
+        ex_key = (p["md_rel"], gnum)
+        ex_html = lesson_exercises.get(ex_key, "")
         ex_block = ""
         if ex_html:
-            ex_block = f'<section class="exercises"><h3>练习题（【{gnum}】）</h3>{ex_html}</section>'
+            ex_block = (
+                f'<section class="exercises"><h3>练习题（【{gnum}】）</h3>'
+                f'<p class="exercise-answer-ref">对照答案：N1 原书 p.180–185 · N2 原书 p.295–327</p>'
+                f"{ex_html}</section>"
+            )
         imp = importance.get(aid, {})
         stars = int(imp.get("stars") or 0)
         star_block = stars_html(stars, imp, lvl)
@@ -384,7 +493,10 @@ def cards_html(
             f'<span class="importance">{star_block}</span>'
             f"{review_bar_html(aid)}"
             f"<h2>{title}</h2>{pages_block}</header>"
-            f'<div class="body">{content}</div>{ex_block}</article>'
+            f'<div class="body">{content}</div>'
+            f"{ex_block}"
+            f"{review_bar_html(aid, bottom=True)}"
+            f"</article>" 
         )
     return "\n".join(parts)
 
@@ -430,11 +542,14 @@ def build_html(
     lesson_exercises: dict[tuple[str, int], str],
     importance: dict[str, dict],
     lesson_titles: dict[str, dict[int, str]],
+    exercise_answers: dict[str, dict[str, str]] | None = None,
+    ex_answer_totals: tuple[int, int] | None = None,
 ) -> str:
     points = sorted(points, key=lambda x: (gojuon_sort_key(x["pattern"]), x["level"]))
     n1 = sum(1 for p in points if p["level"] == "N1")
     n2 = sum(1 for p in points if p["level"] == "N2")
     lesson_titles_json = json.dumps(lesson_titles, ensure_ascii=False)
+    exercise_answers_json = json.dumps(exercise_answers or {}, ensure_ascii=False)
     lesson_options = lesson_filter_options_html(lesson_titles)
 
     rows: list[str] = []
@@ -449,7 +564,8 @@ def build_html(
         star_cell = stars_html(stars, imp, lvl)
         rows.append(
             f'<tr data-level="{lvl}" data-lesson="{lesson}" data-pattern="{pat.lower()}" '
-            f'data-label="{pat}" data-aid="{aid}" data-stars="{stars}" data-review="new">'
+            f'data-label="{pat}" data-aid="{aid}" data-gidx="{seq - 1}" data-stars="{stars}" '
+            f'data-review="new">'
             f'<td class="idx-num">{seq}</td>'
             f'<td class="idx-lvl"><span class="badge {badge}">{lvl}</span></td>'
             f'<td class="pass-col"></td>'
@@ -458,6 +574,14 @@ def build_html(
             f'<td class="idx-lesson"><a class="go" href="#" data-aid="{aid}">{lesson}</a></td></tr>'
         )
 
+    ex_tot, ex_ans = ex_answer_totals or (0, 0)
+    ex_miss = ex_tot - ex_ans
+    ex_summary = ""
+    if ex_tot:
+        ex_summary = (
+            f" · 练习答案 {ex_ans}/{ex_tot}"
+            f'<span class="title-ex-missing">（缺 {ex_miss}）</span>'
+        )
     cards = cards_html(points, bodies, lesson_exercises, importance, lesson_titles)
     ui_css = UI_CSS.read_text(encoding="utf-8") if UI_CSS.exists() else ""
     ui_js = UI_JS.read_text(encoding="utf-8") if UI_JS.exists() else ""
@@ -819,10 +943,8 @@ body.toolbar-expanded .toolbar-body {{ padding-right: 3rem; }}
   height: 100%;
   overflow: hidden;
 }}
-.index-panel h2 {{
+.index-panel .index-head {{
   flex-shrink: 0;
-  margin: 0; padding: .55rem 1rem; font-size: .88rem;
-  border-bottom: 1px solid var(--border); background: #faf9f7;
 }}
 .index-panel .index-hint {{
   flex-shrink: 0;
@@ -970,7 +1092,7 @@ a.go:hover {{ text-decoration: underline; }}
     <div class="toolbar-row toolbar-row-head">
       <h1 class="toolbar-title" title="重要度★＝真题55%+网评45%（悬停★可见）">
         JLPT新完全掌握语法 N1/N2
-        <span class="title-sub">{len(points)} 条 · N1 {n1} · N2 {n2}</span>
+        <span class="title-sub">{len(points)} 条 · N1 {n1} · N2 {n2}{ex_summary}</span>
       </h1>
       <div class="sync-toolbar" id="sync-toolbar" hidden>
         <div class="sync-toolbar-row">
@@ -1029,7 +1151,10 @@ a.go:hover {{ text-decoration: underline; }}
 </header>
 <main class="layout">
   <aside class="index-panel" id="index-panel">
-    <h2 id="index-title">五十音索引</h2>
+    <div class="index-head">
+      <h2 id="index-title">五十音索引</h2>
+      <button type="button" id="btn-index-sort" class="index-sort-btn" title="切换为乱序索引">乱序</button>
+    </div>
     <p class="index-hint">滚轮 / 触控板在此翻阅 · ↑↓ 或 J/K 移动 · Enter 打开</p>
     <div class="index-scroll" id="index-scroll" tabindex="0" aria-label="语法索引列表">
       <table id="idx">
@@ -1076,6 +1201,7 @@ a.go:hover {{ text-decoration: underline; }}
 </div>
 <script>
 const LESSON_TITLES = {lesson_titles_json};
+window.GRAMMAR_EXERCISE_ANSWERS = {exercise_answers_json};
 </script>
 <script>
 (function() {{
@@ -1328,8 +1454,13 @@ def main() -> None:
     points = load_points()
     bodies: dict[str, dict[str, str]] = {}
     lesson_exercises: dict[tuple[str, int], str] = {}
+    ex_total = 0
+    ex_answered = 0
     body_cache: dict[Path, dict[str, dict[str, str]]] = {}
     ex_cache: dict[Path, dict[int, str]] = {}
+    exercise_answers = load_exercise_answers()
+    if not exercise_answers:
+        print("Note: run 语法复习/extract_grammar_exercise_answers.py for clickable exercise keys")
 
     for p in points:
         md_path = BASE / p["md_rel"]
@@ -1345,19 +1476,41 @@ def main() -> None:
         if ex_md not in ex_cache:
             ex_cache[ex_md] = extract_exercises(ex_md)
         if ex_gnum in ex_cache[ex_md]:
-            lesson_exercises[(p["md_rel"], p["grammar_num"])] = ex_cache[ex_md][ex_gnum]
+            ex_key = (p["md_rel"], p["grammar_num"])
+            frag_html, n_tot, n_ans = exercise_fragment_to_html(
+                ex_cache[ex_md][ex_gnum],
+                answers_for_point(p, bodies, exercise_answers),
+            )
+            lesson_exercises[ex_key] = frag_html
+            ex_total += n_tot
+            ex_answered += n_ans
 
     importance = load_importance()
     if not importance:
         print("Note: run compute_jlpt_importance.py to generate star ratings")
     lesson_titles = extract_lesson_titles()
-    html_out = build_html(points, bodies, lesson_exercises, importance, lesson_titles)
+    answers_by_anchor: dict[str, dict[str, str]] = {}
+    for p in points:
+        ans = answers_for_point(p, bodies, exercise_answers)
+        if ans:
+            answers_by_anchor[p["anchor_id"]] = ans
+    html_out = build_html(
+        points,
+        bodies,
+        lesson_exercises,
+        importance,
+        lesson_titles,
+        answers_by_anchor,
+        (ex_total, ex_answered),
+    )
     OUT_HTML.write_text(html_out, encoding="utf-8")
     missing = sum(1 for p in points if p["anchor_id"] not in bodies)
     with_ex = sum(1 for p in points if (p["md_rel"], p["grammar_num"]) in lesson_exercises)
+    ex_missing = ex_total - ex_answered
     print(
         f"Wrote: {OUT_HTML.name} ({len(html_out) // 1024} KB, {len(points)} entries, "
-        f"{missing} missing body, {with_ex} with exercises)"
+        f"{missing} missing body, {with_ex} with exercises, "
+        f"answers {ex_answered}/{ex_total}, missing {ex_missing})"
     )
 
 

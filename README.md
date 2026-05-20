@@ -9,6 +9,7 @@
 | [index.html](index.html) | **打开此文件** 即可复习（Chrome 等） |
 | `build_grammar_review_html.py` | 从校对版生成 HTML |
 | `grammar_review_ui.js` / `grammar_review_ui.css` | Anki 式卡片复习、3遍进度 localStorage（构建时内嵌进 HTML） |
+| `grammar_exercise_answers_expert.json` | 专家补全的练习答案（与 OCR 答案合并） |
 
 ## 使用
 
