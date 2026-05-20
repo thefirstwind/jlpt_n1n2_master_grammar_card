@@ -502,6 +502,7 @@
     deckIndex = 0;
     setToolbarExpanded(false);
     overlay.classList.add("open");
+    document.body.classList.add("review-open");
     document.body.style.overflow = "hidden";
     updateUndoButton();
     showCard(deck[0]);
@@ -509,6 +510,7 @@
 
   function closeReview() {
     overlay.classList.remove("open");
+    document.body.classList.remove("review-open");
     document.body.style.overflow = "";
   }
 

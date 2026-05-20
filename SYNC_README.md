@@ -1,4 +1,4 @@
-# 复习进度云端同步（Mac / iPad）
+# 复习进度云端同步（Mac / 平板：iPad、华为等）
 
 **只需填邮箱**：进度按邮箱在浏览器内哈希后存云端，换邮箱即切换账号；本机改动约 2 秒自动上传，打开页面时自动与云端对齐。
 
@@ -58,23 +58,33 @@ GRAMMAR_SYNC_BASE_URL=https://xxx.workers.dev
 
 或 `SUPABASE_URL` + `SUPABASE_ANON_KEY`，然后重建 HTML。
 
-## iPad 同步失败「无法连接同步服务」
+## 平板同步失败「无法连接同步服务」（华为 / iPad 等）
 
-Mac 能同步、**仅 iPad 不行**时，常见有两类原因：
+电脑能同步、**仅平板不行**时，先用系统浏览器打开自测：
 
-### 1. Safari 跨站拦截（GitHub Pages + workers.dev）
+`https://jlptn1n2mastergrammarcard.jlptn1n2mastergrammarcard.workers.dev/health`
 
-复习页在 `github.io`，同步 API 在 `workers.dev`，iPad Safari 的「防止跨站跟踪」可能直接拦掉 `fetch`。
+应显示 **`ok`**。
 
-**可先试（最快）**
+| 自测结果 | 常见原因 | 处理 |
+|----------|----------|------|
+| **打不开** | 平板网络访问不到 `*.workers.dev`（华为/安卓在国内较常见） | 换 Wi‑Fi、手机热点；或与电脑用同一网络；长期可为 Worker 绑自己的域名 |
+| **能打开 ok，复习页仍失败** | 见下：iPad Safari 跨站拦截；或平板内置浏览器限制 | 换 **Chrome** 打开 GitHub Pages；iPad 可关 Safari「防止跨站跟踪」 |
 
-1. iPad **Safari** 打开：`https://jlptn1n2mastergrammarcard.jlptn1n2mastergrammarcard.workers.dev/health`  
-   - 应显示 `ok`  
-   - 若**打不开**：多为网络/地区限制（见下），不是页面配置问题  
-   - 若**能打开**但复习页仍失败：  
-     **设置 → Safari → 隐私** → 暂时关闭 **「防止跨站跟踪」** → 回到复习页强刷后点「立即同步」
+### 华为 / 鸿蒙 / 安卓平板
 
-**长期推荐：Cloudflare Pages 同源部署**（API 与页面同域名，iPad 最稳）
+1. 用 **浏览器**（推荐 **Chrome**）打开复习页，不要用部分 App 内置网页（可能拦跨域请求）。
+2. 在浏览器地址栏直接打开上面的 `/health`；若打不开，与页面配置无关，是**网络到不了 Cloudflare Worker**。
+3. 若 health 正常仍无法同步：清除该站点数据后重试，或换 Chrome 再填同一邮箱点「同步」。
+
+### iPad（Safari）
+
+复习页在 `github.io`、同步在 `workers.dev` 时，Safari 的 **「防止跨站跟踪」** 可能拦掉 `fetch`：  
+**设置 → Safari → 隐私** → 暂时关闭该选项 → 强刷复习页后点「立即同步」。
+
+### 长期更稳：Cloudflare Pages 同源部署
+
+API 与页面同域名，平板（含华为）一般更省事：
 
 ```bash
 cd 语法复习
@@ -83,10 +93,6 @@ npx wrangler pages deploy . --config wrangler.pages.toml
 python enable_cloud_sync.py --same-origin
 # 用 Pages 给出的 *.pages.dev 地址打开复习页（不要用 github.io）
 ```
-
-### 2. 网络访问不到 workers.dev
-
-部分移动网络/地区无法访问 `*.workers.dev`。请在 iPad 用 Safari 直接打开上面的 `/health` 自测；必要时换 Wi‑Fi、热点，或为 Worker 绑定**自己的域名**（Cloudflare 控制台 → Worker → Custom Domains）。
 
 ---
 
@@ -113,7 +119,7 @@ GitHub Pages **只能**托管静态 HTML，不能存复习进度；`enable_cloud
 ## 日常使用
 
 1. 用 **GitHub Pages** 或 `./serve.sh` 打开页面，不要用 `file://`。
-2. 工具栏 **同步邮箱** 填写你的邮箱（Mac 与 iPad 用同一邮箱）。
+2. 工具栏 **同步邮箱** 填写你的邮箱（电脑与平板用同一邮箱）。
 3. 改邮箱后按 **Enter** 或失焦，会自动拉取该邮箱的云端进度并上传本机。
 4. **立即同步**：手动对齐一次。
 5. 复习打分、遍次、断点等变更会自动上传，无需再点保存。

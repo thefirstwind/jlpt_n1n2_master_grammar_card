@@ -1,4 +1,4 @@
-/** 邮箱云端同步：Mac / iPad 填同一邮箱即可。支持 http(Worker) 或 supabase。 */
+/** 邮箱云端同步：Mac / 平板（iPad、华为等）填同一邮箱即可。支持 http(Worker) 或 supabase。 */
 (function () {
   const CFG = window.GRAMMAR_SYNC_CONFIG;
   const LS_EMAIL = "shinkanzen_grammar_sync_email";
@@ -56,6 +56,10 @@
     return /iPad|iPhone|iPod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
   }
 
+  function isAndroidTablet() {
+    return /Android|HarmonyOS|HMOS|HONOR|HuaweiBrowser/i.test(navigator.userAgent);
+  }
+
   function apiBase() {
     if (!CFG) return "";
     if (CFG.sameOrigin) {
@@ -76,19 +80,28 @@
     const msg = err && err.message ? err.message : String(err);
     if (msg === "Failed to fetch" || msg === "Load failed") {
       const base = apiBase();
+      const healthUrl = base ? `${base}/health` : "Worker地址/health";
       const crossSite = !CFG.sameOrigin && !CFG.autoSameOrigin && !/pages\.dev$/i.test(location.hostname);
+      if (isAndroidTablet()) {
+        return (
+          "平板无法连接同步服务（华为/安卓常见为网络访问不到 workers.dev）。" +
+          "请用系统浏览器打开 " +
+          healthUrl +
+          " 应显示 ok；若打不开请换 Wi‑Fi/热点。若打得开仍失败，建议用 Chrome 打开复习页，或见 SYNC_README「平板同步」"
+        );
+      }
       if (isIOS() && crossSite) {
         return (
-          "iPad 无法连接同步服务：Safari 常拦截跨站请求（GitHub Pages → workers.dev）。" +
-          "请在 iPad 用 Safari 打开 " +
-          (base ? `${base}/health ` : "Worker 的 /health ") +
-          "若打不开，多为网络限制；若打得开却仍失败，请到 设置→Safari→隐私 暂时关闭「防止跨站跟踪」后重试，或改用 Cloudflare Pages 部署（见 SYNC_README）"
+          "平板无法连接同步服务：Safari 可能拦截跨站请求（GitHub Pages → workers.dev）。" +
+          "请用 Safari 打开 " +
+          healthUrl +
+          "；若打得开仍失败，可到 设置→Safari→隐私 暂时关闭「防止跨站跟踪」。详见 SYNC_README"
         );
       }
       return (
         "无法连接同步服务。请用浏览器打开 " +
-        (base ? `${base}/health` : "Worker地址/health") +
-        " 应显示 ok；Mac 能连 iPad 不能时见 SYNC_README「iPad 同步」"
+        healthUrl +
+        " 应显示 ok；电脑能连、平板不能时见 SYNC_README「平板同步」"
       );
     }
     return msg;

@@ -488,90 +488,156 @@ body {{
   background: var(--bg); color: var(--text); line-height: 1.65;
 }}
 .toolbar {{
+  position: relative;
   flex-shrink: 0;
   z-index: 100;
   background: rgba(246,245,242,.95); backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--border);
   padding: .75rem 1rem;
 }}
-body.toolbar-collapsed .toolbar {{ padding: .35rem .55rem .4rem; }}
-.toolbar-top {{
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 0.75rem 1.25rem;
-  margin-bottom: 0.5rem;
+body.toolbar-collapsed .toolbar {{
+  padding: 0;
+  border-bottom: none;
+  background: transparent;
+  backdrop-filter: none;
+  min-height: 0;
 }}
-body.toolbar-collapsed .toolbar-top {{
-  align-items: center;
-  margin-bottom: 0.2rem;
-  gap: 0.35rem 0.6rem;
+body.toolbar-collapsed .toolbar-body {{ display: none !important; }}
+body.toolbar-collapsed .toolbar-toggle {{
+  position: fixed;
+  top: max(.35rem, env(safe-area-inset-top, 0px));
+  right: max(.35rem, env(safe-area-inset-right, 0px));
+  z-index: 120;
+  padding: .4rem .65rem;
+  font-size: .8rem;
+  background: var(--card);
+  box-shadow: 0 2px 10px rgba(0,0,0,.12);
+  border-radius: 8px;
 }}
-.toolbar-brand {{ flex: 1; min-width: 0; }}
-.toolbar-brand h1 {{
-  margin: 0 0 .35rem; font-size: 1.15rem; font-weight: 700;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+body.toolbar-expanded .toolbar {{
+  padding: .5rem .75rem .45rem;
 }}
-body.toolbar-collapsed .toolbar-brand h1 {{ margin: 0; font-size: .92rem; }}
-.toolbar-brand .meta {{ font-size: .8rem; color: var(--muted); margin: 0; line-height: 1.35; }}
-body.toolbar-collapsed .toolbar-brand .meta {{ display: none; }}
-.toolbar h1 {{ margin: 0 0 .5rem; font-size: 1.15rem; font-weight: 700; }}
-.toolbar .meta {{ font-size: .8rem; color: var(--muted); margin-bottom: .5rem; }}
+body.toolbar-expanded .toolbar-body {{ display: block; }}
 .toolbar-toggle {{
   flex-shrink: 0;
-  padding: .22rem .45rem;
+  padding: .28rem .55rem;
   border: 1px solid var(--border);
-  border-radius: 5px;
+  border-radius: 6px;
   background: var(--card);
   color: var(--muted);
   cursor: pointer;
-  font-size: .72rem;
+  font-size: .78rem;
   line-height: 1.2;
 }}
-.toolbar-toggle:hover {{ color: var(--text); border-color: #c5c9d2; }}
-.toolbar-controls-wrap {{
-  display: flex;
-  flex-direction: column;
-  gap: 0.45rem;
+body.toolbar-expanded .toolbar-toggle {{
+  position: absolute;
+  top: .45rem;
+  right: max(.6rem, env(safe-area-inset-right, 0px));
+  z-index: 2;
 }}
-body.toolbar-collapsed .toolbar-controls-wrap {{
-  flex-direction: row;
+body.toolbar-expanded .toolbar-body {{ padding-right: 3rem; }}
+.toolbar-toggle:hover {{ color: var(--text); border-color: #c5c9d2; }}
+.toolbar-row {{
+  display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.28rem;
+  gap: .4rem .55rem;
 }}
-.controls {{ display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }}
-body.toolbar-collapsed .controls {{ gap: .28rem; }}
-#q {{
-  flex: 1; min-width: 160px; padding: .45rem .65rem;
-  border: 1px solid var(--border); border-radius: 6px; font-size: .95rem;
+.toolbar-row + .toolbar-row {{
+  margin-top: .4rem;
+  padding-top: .4rem;
+  border-top: 1px solid var(--border);
 }}
-body.toolbar-collapsed #q {{
-  min-width: 88px; max-width: min(42vw, 220px);
-  padding: .28rem .45rem; font-size: .82rem;
+.toolbar-row-head {{
+  justify-content: space-between;
+  border-top: none !important;
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}}
+.toolbar-title {{
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  display: flex;
+  align-items: baseline;
+  gap: .5rem;
+  flex-wrap: wrap;
+  min-width: 0;
+}}
+.toolbar-title .title-sub {{
+  font-size: .75rem;
+  font-weight: 500;
+  color: var(--muted);
+}}
+.toolbar-group {{
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .35rem;
+}}
+.toolbar-group-label {{
+  font-size: .72rem;
+  color: var(--muted);
+  white-space: nowrap;
+  margin-right: .1rem;
+}}
+.toolbar-group-search {{
+  flex: 1 1 12rem;
+  min-width: 10rem;
+  max-width: 100%;
+}}
+.toolbar-group-search #q {{
+  width: 100%;
+  padding: .38rem .55rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: .88rem;
+}}
+.btn-segment {{
+  display: inline-flex;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--card);
+}}
+.btn-segment .filter-btn {{
+  border: none;
+  border-radius: 0;
+  border-right: 1px solid var(--border);
+  margin: 0;
+  padding: .32rem .55rem;
+  font-size: .8rem;
+}}
+.btn-segment .filter-btn:last-child {{ border-right: none; }}
+.toolbar-group-review {{
+  margin-left: auto;
+}}
+.btn-segment .review-filter-btn[data-review-filter="hard"].active {{
+  background: #dc2626;
+  color: #fff;
+  border-color: #b91c1c;
+}}
+.btn-segment .review-filter-btn[data-review-filter="good"].active {{
+  background: #16a34a;
+  color: #fff;
+  border-color: #15803d;
+}}
+.btn-segment .review-filter-btn[data-review-filter="new"].active {{
+  background: #78716c;
+  color: #fff;
+  border-color: #57534e;
 }}
 .filter-btn {{
-  padding: .4rem .75rem; border: 1px solid var(--border); border-radius: 6px;
-  background: var(--card); cursor: pointer; font-size: .85rem;
-}}
-body.toolbar-collapsed .filter-btn {{
-  padding: .24rem .45rem; font-size: .76rem; border-radius: 5px;
-}}
-body.toolbar-collapsed .lesson-select {{
-  padding: .24rem .35rem; font-size: .76rem; max-width: min(38vw, 160px);
-}}
-body.toolbar-collapsed .review-shuffle-toggle {{
-  padding: .22rem .38rem; font-size: .74rem;
-}}
-body.toolbar-collapsed .review-filter-btn {{ display: none; }}
-body.toolbar-collapsed .index-hint {{ display: none; }}
-body.toolbar-collapsed .index-panel h2 {{
-  padding: .3rem .65rem; font-size: .78rem;
+  padding: .32rem .55rem; border: 1px solid var(--border); border-radius: 6px;
+  background: var(--card); cursor: pointer; font-size: .8rem;
 }}
 .filter-btn.active {{ background: var(--text); color: #fff; border-color: var(--text); }}
+#btn-review {{
+  background: var(--accent); color: #fff; border-color: var(--accent);
+}}
 .lesson-select {{
-  padding: .4rem .5rem; border: 1px solid var(--border); border-radius: 6px;
-  background: var(--card); font-size: .85rem; max-width: min(320px, 100%);
+  padding: .32rem .45rem; border: 1px solid var(--border); border-radius: 6px;
+  background: var(--card); font-size: .8rem; max-width: min(280px, 100%);
 }}
 #lesson-heading {{
   display: flex; align-items: center; gap: .5rem; flex-wrap: wrap;
@@ -587,20 +653,67 @@ body.toolbar-collapsed .index-panel h2 {{
   display: grid; grid-template-columns: minmax(280px, 38%) 1fr;
   gap: 0; max-width: 1400px; width: 100%; margin: 0 auto;
 }}
-@media (max-width: 900px) {{
-  .toolbar-top {{ flex-direction: column; align-items: stretch; }}
+/* 平板 / 手机：全屏 flex，布局随横竖屏切换 */
+@media (max-width: 1100px), (hover: none) and (pointer: coarse) {{
+  html, body {{ height: 100%; overflow: hidden; }}
+  body {{ display: flex; flex-direction: column; }}
+  .toolbar-row-head {{ flex-direction: column; align-items: stretch; }}
+  .toolbar-group-review {{ margin-left: 0; width: 100%; }}
   .sync-toolbar {{ align-items: flex-start; max-width: 100%; }}
-  .sync-toolbar-row {{ justify-content: flex-start; }}
+  .sync-toolbar-row {{ justify-content: flex-start; flex-wrap: wrap; }}
   .sync-status {{ text-align: left; max-width: 100%; }}
-  html, body {{ height: auto; overflow: auto; }}
-  body {{ display: block; }}
+  .layout {{ flex: 1; min-height: 0; max-width: none; }}
+  .toolbar-group-search {{ flex: 1 1 100%; min-width: 0; }}
+  .toolbar-row:not(.toolbar-row-head) {{ align-items: stretch; }}
+  .toolbar-group-review {{ justify-content: flex-start; }}
+  .lesson-select {{ max-width: 100%; }}
+}}
+/* 竖屏：索引在上、正文在下 */
+@media (max-width: 1100px) and (orientation: portrait),
+       (hover: none) and (pointer: coarse) and (orientation: portrait) {{
   .layout {{
-    flex: none; min-height: 0;
+    display: grid;
     grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
   }}
-  .index-panel {{ max-height: 45vh; height: auto; }}
-  .index-scroll {{ max-height: 45vh; overflow-y: auto; }}
-  .content-panel {{ overflow: visible; height: auto; }}
+  .index-panel {{
+    max-height: min(42vh, 380px);
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }}
+  .index-scroll {{ max-height: min(36vh, 320px); }}
+  .content-panel {{
+    min-height: 0;
+    overflow-y: auto;
+    padding: .75rem .85rem 2rem;
+  }}
+}}
+/* 横屏：索引在左、正文在右 */
+@media (max-width: 1100px) and (orientation: landscape),
+       (hover: none) and (pointer: coarse) and (orientation: landscape) {{
+  .layout {{
+    display: grid;
+    grid-template-columns: minmax(200px, 36%) 1fr;
+    grid-template-rows: 1fr;
+  }}
+  .index-panel {{
+    max-height: none;
+    height: 100%;
+    border-right: 1px solid var(--border);
+    border-bottom: none;
+  }}
+  .index-scroll {{
+    flex: 1;
+    min-height: 0;
+    max-height: none;
+  }}
+  .content-panel {{
+    min-height: 0;
+    height: 100%;
+    overflow-y: auto;
+    padding: .75rem 1rem 2rem;
+  }}
 }}
 .index-panel {{
   display: flex;
@@ -756,52 +869,63 @@ a.go:hover {{ text-decoration: underline; }}
 </head>
 <body class="toolbar-collapsed">
 <header class="toolbar">
-  <div class="toolbar-top">
-    <div class="toolbar-brand">
-      <h1 title="新完全掌握 N1/N2 语法复习 · 共 {len(points)} 条（N1 {n1} · N2 {n2}）· 三遍复习 · 重要度★＝真题55%+网评45%">N1/N2 语法</h1>
-      <p class="meta">共 {len(points)} 条（N1 {n1} · N2 {n2}）· 五十音 · 重要度★＝<span class="meta-hint" title="55% 本地27套N1真题 + 45% 网上分档综合评定">真题55%+网评45%</span> · 三遍复习 · 填<strong>同步邮箱</strong>可跨设备同步</p>
-    </div>
-    <button type="button" class="toolbar-toggle" id="btn-toolbar-toggle" title="展开页头说明与筛选" aria-expanded="false">展开</button>
-    <div class="sync-toolbar" id="sync-toolbar" hidden>
-      <div class="sync-toolbar-row">
-        <span class="sync-toolbar-label">同步</span>
-        <input type="email" id="sync-email" class="sync-input" placeholder="邮箱" autocomplete="email" title="Mac / iPad 填同一邮箱">
-        <button type="button" class="filter-btn" id="sync-now">同步</button>
+  <button type="button" class="toolbar-toggle" id="btn-toolbar-toggle" title="展开筛选与设置" aria-expanded="false">展开</button>
+  <div class="toolbar-body" id="toolbar-body">
+    <div class="toolbar-row toolbar-row-head">
+      <h1 class="toolbar-title" title="重要度★＝真题55%+网评45%（悬停★可见）">
+        N1/N2 语法
+        <span class="title-sub">{len(points)} 条 · N1 {n1} · N2 {n2}</span>
+      </h1>
+      <div class="sync-toolbar" id="sync-toolbar" hidden>
+        <div class="sync-toolbar-row">
+          <input type="email" id="sync-email" class="sync-input" placeholder="同步邮箱" autocomplete="email" title="电脑与平板填同一邮箱">
+          <button type="button" class="filter-btn" id="sync-now">同步</button>
+        </div>
+        <span id="sync-status" class="sync-status" title=""></span>
       </div>
-      <span id="sync-status" class="sync-status" title=""></span>
     </div>
-  </div>
-  <div class="toolbar-controls-wrap">
-  <div class="controls">
-    <input type="search" id="q" placeholder="搜索语法（如：が早いか、にあって）…" autocomplete="off">
-    <button type="button" class="filter-btn active" data-level="ALL">全部</button>
-    <button type="button" class="filter-btn" data-level="N1">N1</button>
-    <button type="button" class="filter-btn" data-level="N2">N2</button>
-    <select id="lesson-filter" class="lesson-select" title="按课次筛选">
+    <div class="toolbar-row">
+      <div class="toolbar-group toolbar-group-search">
+        <input type="search" id="q" placeholder="搜索语法…" autocomplete="off">
+      </div>
+      <div class="toolbar-group">
+        <span class="toolbar-group-label">级别</span>
+        <div class="btn-segment" role="group" aria-label="级别筛选">
+          <button type="button" class="filter-btn active" data-level="ALL">全部</button>
+          <button type="button" class="filter-btn" data-level="N1">N1</button>
+          <button type="button" class="filter-btn" data-level="N2">N2</button>
+        </div>
+        <select id="lesson-filter" class="lesson-select" title="按课次筛选">
 {lesson_options}
-    </select>
-    <span id="review-stats" class="review-stats"></span>
-    <label class="review-shuffle-toggle" title="卡片/待复习时打乱出题顺序">
-      <input type="checkbox" id="review-shuffle" checked> 乱序
-    </label>
-    <button type="button" class="filter-btn" id="btn-review">卡片复习</button>
-    <button type="button" class="filter-btn" id="btn-review-weak">待复习</button>
-    <button type="button" class="filter-btn review-filter-btn active" data-review-filter="ALL">全部</button>
-    <button type="button" class="filter-btn review-filter-btn" data-review-filter="new">未评</button>
-    <button type="button" class="filter-btn review-filter-btn" data-review-filter="hard">不熟</button>
-    <button type="button" class="filter-btn review-filter-btn" data-review-filter="good">熟悉</button>
-  </div>
-  <div class="pass-toolbar">
-    <span class="pass-toolbar-label">当前遍次：</span>
-    <button type="button" class="pass-btn active" data-pass="1">第1遍</button>
-    <button type="button" class="pass-btn" data-pass="2">第2遍</button>
-    <button type="button" class="pass-btn" data-pass="3">第3遍</button>
-    <span id="pass-progress" class="pass-progress"></span>
-    <label class="pass-incomplete-toggle" title="卡片复习只出当前遍尚未完成的语法">
-      <input type="checkbox" id="pass-incomplete" checked> 仅本遍未完成
-    </label>
-    <button type="button" class="pass-clear-btn" data-clear-pass title="清除当前遍全部记录">清除第1遍</button>
-  </div>
+        </select>
+      </div>
+      <div class="toolbar-group">
+        <span class="toolbar-group-label">熟悉度</span>
+        <div class="btn-segment" role="group" aria-label="按当前遍熟悉度筛选列表">
+          <button type="button" class="filter-btn review-filter-btn active" data-review-filter="ALL">全部</button>
+          <button type="button" class="filter-btn review-filter-btn" data-review-filter="new">未评</button>
+          <button type="button" class="filter-btn review-filter-btn" data-review-filter="hard">不熟</button>
+          <button type="button" class="filter-btn review-filter-btn" data-review-filter="good">熟悉</button>
+        </div>
+      </div>
+      <div class="toolbar-group toolbar-group-review">
+        <span id="review-stats" class="review-stats"></span>
+        <label class="review-shuffle-toggle" title="卡片复习打乱顺序"><input type="checkbox" id="review-shuffle" checked> 乱序</label>
+        <button type="button" class="filter-btn" id="btn-review">卡片复习</button>
+        <button type="button" class="filter-btn" id="btn-review-weak">待复习</button>
+      </div>
+    </div>
+    <div class="toolbar-row pass-toolbar">
+      <span class="toolbar-group-label">遍次</span>
+      <div class="btn-segment" role="group" aria-label="当前复习遍次">
+        <button type="button" class="pass-btn active" data-pass="1">第1遍</button>
+        <button type="button" class="pass-btn" data-pass="2">第2遍</button>
+        <button type="button" class="pass-btn" data-pass="3">第3遍</button>
+      </div>
+      <span id="pass-progress" class="pass-progress"></span>
+      <label class="pass-incomplete-toggle" title="卡片复习只出本遍未完成"><input type="checkbox" id="pass-incomplete" checked> 仅未完成</label>
+      <button type="button" class="pass-clear-btn" data-clear-pass title="清除当前遍全部记录">清除本遍</button>
+    </div>
   </div>
 </header>
 <main class="layout">
