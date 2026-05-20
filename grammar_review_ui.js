@@ -7,6 +7,7 @@
   const PASS_PREF_KEY = "shinkanzen_grammar_current_pass";
   const LAST_PLACE_KEY = "shinkanzen_grammar_last_place";
   const TOOLBAR_EXPAND_KEY = "shinkanzen_grammar_toolbar_expanded";
+  const EXERCISE_GRADE_KEY = "shinkanzen_grammar_exercise_grade_v1";
   const TARGET_PASSES = 3;
 
   const STATUS = { NEW: "new", HARD: "hard", GOOD: "good", LEARNING: "learning" };
@@ -23,6 +24,7 @@
   let lastViewedAid = null;
   let reviewFilter = "ALL";
   let indexSortMode = "gojuon";
+  let exerciseGradeEnabled = localStorage.getItem(EXERCISE_GRADE_KEY) === "1";
   /** @type {{ aid: string, index: number, snapshot: object | null }[]} */
   let reviewHistory = [];
 
@@ -826,11 +828,105 @@
     });
   }
 
+  function getExerciseAnalysis(aid, q) {
+    const map = window.GRAMMAR_EXERCISE_ANALYSIS;
+    if (!map || !aid || !map[aid]) return null;
+    const entry = map[aid];
+    const qs = entry.questions || entry;
+    return qs && qs[q] ? qs[q] : null;
+  }
+
+  function renderExerciseAnalysis(item, aid, q) {
+    if (!item || !aid || !q) return;
+    const data = getExerciseAnalysis(aid, q);
+    let box = item.querySelector(".ex-analysis");
+    if (!data || !data.options) {
+      if (box) box.remove();
+      return;
+    }
+    const letters = ["a", "b", "c"];
+    const parts = [];
+    if (entryRule(aid)) {
+      parts.push(`<p class="ex-analysis-rule"><strong>要点</strong> ${escapeHtml(entryRule(aid))}</p>`);
+    }
+    letters.forEach((letter) => {
+      const od = data.options[letter];
+      if (!od || !od.reason) return;
+      const cls = od.verdict === "correct" ? "ex-opt-correct" : "ex-opt-wrong";
+      const tag = od.verdict === "correct" ? "正解" : "不选";
+      parts.push(
+        `<div class="ex-analysis-opt ${cls}">` +
+          `<span class="ex-analysis-tag">${tag} ${letter}</span> ` +
+          `<span class="ex-analysis-text">${escapeHtml(od.reason)}</span>` +
+        `</div>`
+      );
+    });
+    if (!parts.length) {
+      if (box) box.remove();
+      return;
+    }
+    const html = `<div class="ex-analysis-inner">${parts.join("")}</div>`;
+    if (!box) {
+      box = document.createElement("div");
+      box.className = "ex-analysis";
+      item.appendChild(box);
+    }
+    box.innerHTML = html;
+    box.hidden = false;
+  }
+
+  function entryRule(aid) {
+    const map = window.GRAMMAR_EXERCISE_ANALYSIS;
+    if (!map || !aid || !map[aid]) return "";
+    return map[aid].rule || "";
+  }
+
+  function escapeHtml(s) {
+    return String(s)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function revealExerciseAnalysis(section, aid) {
+    if (!section || !aid) return;
+    section.querySelectorAll(".exercise-item[data-q]").forEach((item) => {
+      const q = item.dataset.q;
+      renderExerciseAnalysis(item, aid, q);
+    });
+  }
+
+  function revealExerciseAnswers(section) {
+    if (!section) return;
+    const card = section.closest(".grammar-card");
+    const aid = card && card.id;
+    section.querySelectorAll(".exercise-item[data-answer]").forEach((item) => {
+      const correct = (item.dataset.answer || "").toLowerCase();
+      if (!correct) return;
+      item.classList.add("answered");
+      const show = item.querySelector(`.options [data-opt="${correct}"]`);
+      if (show) show.classList.add("ex-correct");
+      if (aid && item.dataset.q) renderExerciseAnalysis(item, aid, item.dataset.q);
+    });
+    if (aid) revealExerciseAnalysis(section, aid);
+  }
+
   function handleExercisePick(li) {
     const item = li.closest(".exercise-item");
-    if (!item || item.classList.contains("answered")) return;
+    if (!item) return;
     const picked = (li.dataset.opt || "").toLowerCase();
     const correct = (item.dataset.answer || "").toLowerCase();
+
+    if (!exerciseGradeEnabled) {
+      item.querySelectorAll(".options li[data-opt]").forEach((o) => {
+        o.classList.remove("ex-picked", "ex-correct", "ex-wrong");
+      });
+      li.classList.add("ex-picked");
+      return;
+    }
+
+    if (item.classList.contains("answered")) return;
     item.classList.add("answered");
     if (!correct) {
       li.classList.add("ex-picked");
@@ -843,6 +939,9 @@
       const show = item.querySelector(`.options [data-opt="${correct}"]`);
       if (show) show.classList.add("ex-correct");
     }
+    const card = item.closest(".grammar-card");
+    const aid = card && card.id;
+    if (aid && item.dataset.q) renderExerciseAnalysis(item, aid, item.dataset.q);
   }
 
   function onExerciseOptionEvent(e) {
@@ -854,6 +953,13 @@
   }
 
   document.addEventListener("click", (e) => {
+    const showBtn = e.target.closest(".ex-show-answers");
+    if (showBtn) {
+      e.preventDefault();
+      e.stopPropagation();
+      revealExerciseAnswers(showBtn.closest(".exercises"));
+      return;
+    }
     if (e.target.closest(".exercises .options li[data-opt]")) {
       onExerciseOptionEvent(e);
       return;
@@ -907,6 +1013,15 @@
     if (id && document.getElementById(id) && typeof window.__grammarGoTo === "function") {
       window.__grammarGoTo(id, { resume: true });
     }
+  }
+
+  const gradeCheckbox = document.getElementById("exercise-grade");
+  if (gradeCheckbox) {
+    gradeCheckbox.checked = exerciseGradeEnabled;
+    gradeCheckbox.addEventListener("change", () => {
+      exerciseGradeEnabled = gradeCheckbox.checked;
+      localStorage.setItem(EXERCISE_GRADE_KEY, exerciseGradeEnabled ? "1" : "0");
+    });
   }
 
   document.querySelectorAll(".grammar-card[id]").forEach((card) => {

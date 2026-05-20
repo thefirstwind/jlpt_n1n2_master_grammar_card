@@ -1,0 +1,4322 @@
+{
+  "n2-l01-g01": {
+    "rule": "意味： ⇒ 〜とき。〔硬い言い方〕",
+    "questions": {
+      "1": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "天气名词，与查修理处无关"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "大扫除时检查需修处，符合"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "动词句，不接名-の際"
+          }
+        }
+      },
+      "2": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "状态，非查发音场景"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "状态"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "查发音之际，动辞書形+際"
+          }
+        }
+      },
+      "3": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "用餐场合，名-の+際"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "口语"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "一人份，非用餐"
+          }
+        }
+      },
+      "4": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "日常行为"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "寮生活注意事项"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "单次行为"
+          }
+        }
+      },
+      "5": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "硬体须知句"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "过口语"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "状态描写非指示"
+          }
+        }
+      }
+    }
+  },
+  "n2-l01-g02": {
+    "rule": "意味： ⇒ 〜するとき。〔硬い言い方〕",
+    "questions": {
+      "1": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "回復非特殊一次性"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "手术前问医生，特殊时刻"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "日常行为"
+          }
+        }
+      },
+      "2": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "个人状态"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "个人担心"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "旅行前说明会，正式准备"
+          }
+        }
+      },
+      "3": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "日常出勤"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "留学，重大新开始"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "日常"
+          }
+        }
+      },
+      "4": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "感想"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "感想"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "移転挨拶，正式"
+          }
+        }
+      }
+    }
+  },
+  "n2-l01-g03": {
+    "rule": "意味： ⇒ 〜したら、直後に意外なことが起こる。",
+    "questions": {
+      "1": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "终了瞬间"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "进行中"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "持续"
+          }
+        }
+      },
+      "2": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "进行中"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "接近"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "ゴールイン瞬间"
+          }
+        }
+      },
+      "3": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "意外哭泣"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "普通招呼"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "状态"
+          }
+        }
+      },
+      "4": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "意志"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "意外涌入"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "自主动作"
+          }
+        }
+      }
+    }
+  },
+  "n2-l01-g04": {
+    "rule": "意味： ⇒ 〜の後、すぐに続いて次の出来事や大きな変化が起こる。",
+    "questions": {
+      "1": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "一人称主语冗余"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "复数"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "三人称，刚下车就跑"
+          }
+        }
+      },
+      "2": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "弱变"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "反差放晴"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "同向加剧"
+          }
+        }
+      },
+      "3": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "紧接着播新闻"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "无关"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "可通但不如 a 固定搭配"
+          }
+        }
+      },
+      "4": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "人聚集的事实"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "邀请"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "许可问句"
+          }
+        }
+      }
+    }
+  },
+  "n2-l01-g05": {
+    "rule": "意味： ⇒ 〜が終わると同時に、次のことが起こる。",
+    "questions": {
+      "1": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "覚えたか覚えないか"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "进行中"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "无关"
+          }
+        }
+      },
+      "2": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "思考"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "10分たったかたたないか"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "努力"
+          }
+        }
+      },
+      "3": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "蝉鸣事实"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "意志"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "意志"
+          }
+        }
+      },
+      "4": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "命令"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "跑出去事实"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "建议"
+          }
+        }
+      }
+    }
+  },
+  "n2-l02-g01": {
+    "rule": "意味： ⇒ ちょうど〜しているところだ。",
+    "questions": {
+      "1": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "辞書形"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "話している最中"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "て形"
+          }
+        }
+      },
+      "2": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "长期留学"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "調べもの中"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "长期工作"
+          }
+        }
+      },
+      "3": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "洗濯中停水"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "购物"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "出差"
+          }
+        }
+      },
+      "4": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "地震妨碍"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "感想"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "正常继续"
+          }
+        }
+      },
+      "5": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "正面"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "正面"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "手机响，意外妨碍"
+          }
+        }
+      }
+    }
+  },
+  "n2-l02-g02": {
+    "rule": "意味（A）： ⇒ 時間の制限があって、〜でなくなった後では実現が難しいから、その前にしてしまう。",
+    "questions": {
+      "1": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "溶ける前"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "正在化"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "否定形"
+          }
+        }
+      },
+      "2": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "歩いているうちに"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "走完后"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "辞書形"
+          }
+        }
+      },
+      "3": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "有钱时"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "领工资"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "残る不自然"
+          }
+        }
+      },
+      "4": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "陈述"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "趁热请用"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "陈述"
+          }
+        }
+      },
+      "5": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "感想"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "感想"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "看着看着懂了"
+          }
+        }
+      }
+    }
+  },
+  "n2-l02-g03": {
+    "rule": "意味： ⇒ 〜という一方方向に変化が進んでいく。",
+    "questions": {
+      "1": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "値上がりする一方"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "ている"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "た形"
+          }
+        }
+      },
+      "2": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "静态"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "寒くなる一方"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "名词"
+          }
+        }
+      },
+      "3": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "反向"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "反向"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "なくなるばかり"
+          }
+        }
+      }
+    }
+  },
+  "n2-l02-g04": {
+    "rule": "意味： ⇒ 〜という変化が起こる少し前だ・もうすぐ〜する。〔硬い言い方〕",
+    "questions": {
+      "1": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "辞書形"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "そう"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "生まれようとしていた"
+          }
+        }
+      },
+      "2": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "结构错误"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "降ろう"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "寒くなろうとしています"
+          }
+        }
+      }
+    }
+  },
+  "n2-l02-g05": {
+    "rule": "意味： ⇒ 〜という変化が進行中だ。〔硬い言い方〕",
+    "questions": {
+      "1": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "慣れつつある"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "い形"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "ようになる"
+          }
+        }
+      },
+      "2": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "就活"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "体力恢复"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "食べ"
+          }
+        }
+      }
+    }
+  },
+  "n2-l02-g06": {
+    "rule": "意味： ⇒ 〜ながら、あることをする。〔硬い言い方〕",
+    "questions": {
+      "1": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "结果"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "相談しつつ決めたい"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "已完成"
+          }
+        }
+      },
+      "2": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "こぎつつ"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "座り"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "乗り"
+          }
+        }
+      },
+      "3": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "て形"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "つつ硬"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "ながら自然"
+          }
+        }
+      }
+    }
+  },
+  "n2-l03-g01": {
+    "rule": "意味： ⇒ 〜を経験した後や、〜という状態になった後で、今までになかったことが起こる。",
+    "questions": {
+      "1": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "飼ってはじめて"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "非て形"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "否定"
+          }
+        }
+      },
+      "2": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "新认识"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "意志"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "感想"
+          }
+        }
+      },
+      "3": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "感想"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "厳しさがわかった"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "辞职"
+          }
+        }
+      },
+      "4": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "感想"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "困惑"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "育儿难"
+          }
+        }
+      }
+    }
+  },
+  "n2-l03-g02": {
+    "rule": "意味： ⇒ 準備としてまず〜してから、その後で次に続く行動をする。",
+    "questions": {
+      "1": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "未做"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "て形"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "押した上で"
+          }
+        }
+      },
+      "2": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "作って食べませんか"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "から"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "上で不自然"
+          }
+        }
+      },
+      "3": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "终了"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "医生说明"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "读说明书后"
+          }
+        }
+      },
+      "4": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "いただいた"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "くださった"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "あげた"
+          }
+        }
+      },
+      "5": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "过去"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "予約后决定买"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "になった"
+          }
+        }
+      }
+    }
+  },
+  "n2-l03-g03": {
+    "rule": "意味： ⇒ 〜が実現した後、すぐに続けてある行動をする。",
+    "questions": {
+      "1": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "辞書形"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "集まり次第"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "て形"
+          }
+        }
+      },
+      "2": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "起こり"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "悪くなり"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "届き次第"
+          }
+        }
+      },
+      "3": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "失败"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "留学し"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "终了后回国"
+          }
+        }
+      },
+      "4": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "お返しください"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "过去"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "否定"
+          }
+        }
+      },
+      "5": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "不必"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "終わり次第始めます"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "过去"
+          }
+        }
+      }
+    }
+  },
+  "n2-l03-g04": {
+    "rule": "意味： ⇒ 〜してから今まで、ずっと同じ状態が続いている。",
+    "questions": {
+      "1": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "回家"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "吃完饭"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "换职场以来"
+          }
+        }
+      },
+      "2": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "以来一直未去"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "去过一次"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "暂时"
+          }
+        }
+      },
+      "3": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "意志"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "なっている"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "推测"
+          }
+        }
+      }
+    }
+  },
+  "n2-l03-g05": {
+    "rule": "意味： ⇒ 〜した後でなければ、あることが実現しない。",
+    "questions": {
+      "1": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "会开车"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "想法"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "资金准备"
+          }
+        }
+      },
+      "2": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "会回复"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "等待"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "不能回复"
+          }
+        }
+      },
+      "3": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "感觉"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "不能开始讨论"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "司会"
+          }
+        }
+      }
+    }
+  },
+  "n2-l04-g01": {
+    "rule": "意味： ⇒ 〜が代表例で、そのほかにもいろいろある。",
+    "questions": {
+      "1": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "中等城市"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "东京代表大城市"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "名古屋"
+          }
+        }
+      },
+      "2": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "先生たち"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "单人"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "事务"
+          }
+        }
+      },
+      "3": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "笼统"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "カンガルーなど"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "鸟"
+          }
+        }
+      }
+    }
+  },
+  "n2-l04-g02": {
+    "rule": "意味： ⇒ 〜という例一つを取ってもそうなのだから、全体的にももちろんそうだ。",
+    "questions": {
+      "1": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "料理"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "食器の色からして"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "味"
+          }
+        }
+      },
+      "2": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "练习不足陈述"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "建议"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "命令"
+          }
+        }
+      },
+      "3": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "有趣"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "进步"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "子供っぽい"
+          }
+        }
+      },
+      "4": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "尺寸满意但色不合"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "喜欢"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "缺转折"
+          }
+        }
+      }
+    }
+  },
+  "n2-l04-g03": {
+    "rule": "意味： ⇒ この範囲全体にその状態が広がっている。",
+    "questions": {
+      "1": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "整月"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "连休期间"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "一周"
+          }
+        }
+      },
+      "2": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "庭"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "站前"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "全县"
+          }
+        }
+      },
+      "3": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "单一事实"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "众多国立公园"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "四岛"
+          }
+        }
+      },
+      "4": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "两代经营"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "开店"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "关店"
+          }
+        }
+      }
+    }
+  },
+  "n2-l04-g04": {
+    "rule": "意味（A）： ⇒ 〜への期間ずっと同じ状態だ。",
+    "questions": {
+      "1": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "四季を通じて"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "今年"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "3小时"
+          }
+        }
+      },
+      "2": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "英语"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "电话"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "旅行社手段"
+          }
+        }
+      },
+      "3": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "从未迟到"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "有时"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "一次"
+          }
+        }
+      },
+      "4": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "计划"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "知った"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "感动"
+          }
+        }
+      }
+    }
+  },
+  "n2-l04-g05": {
+    "rule": "意味： ⇒ この範囲は全部あることをする・ある状態だ。",
+    "questions": {
+      "1": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "命の限り"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "に"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "缺の"
+          }
+        }
+      },
+      "2": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "见新闻"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "知っている限り"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "拍照"
+          }
+        }
+      },
+      "3": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "辞書形"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "許せる限り"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "过去"
+          }
+        }
+      }
+    }
+  },
+  "n2-l04-g06": {
+    "rule": "意味： ⇒ 〜の範囲の限界まであることをする。",
+    "questions": {
+      "1": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "必要"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "だ"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "必要なだけ"
+          }
+        }
+      },
+      "2": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "持つ"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "持てるだけ"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "持てた"
+          }
+        }
+      },
+      "3": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "疲れた"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "好きな"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "眠いだけ"
+          }
+        }
+      }
+    }
+  },
+  "n2-l05-g01": {
+    "rule": "意味： ⇒ 〜だけは特別だ・例外だ。",
+    "questions": {
+      "1": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "购买者"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "未使用の場合"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "全部"
+          }
+        }
+      },
+      "2": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "第4日曜"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "平日"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "周末外"
+          }
+        }
+      },
+      "3": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "价格"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "禁止"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "有礼物"
+          }
+        }
+      },
+      "4": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "できる"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "过去"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "する"
+          }
+        }
+      },
+      "5": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "しか"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "だけ"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "に限り"
+          }
+        }
+      }
+    }
+  },
+  "n2-l05-g02": {
+    "rule": "意味： ⇒ 〜の状態が続いている間だけは、同じ状態が続く。",
+    "questions": {
+      "1": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "谢了仍原谅"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "不谢不原谅"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "进行时"
+          }
+        }
+      },
+      "2": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "社会人である限り"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "になる"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "の"
+          }
+        }
+      },
+      "3": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "出了热"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "高熱が続く"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "38度点"
+          }
+        }
+      },
+      "4": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "说服"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "离家"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "不能结婚"
+          }
+        }
+      },
+      "5": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "强くならない"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "会变强"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "下一场输"
+          }
+        }
+      }
+    }
+  },
+  "n2-l05-g03": {
+    "rule": "意味： ⇒ 情報源の範囲を〜だけにすると、あることが言える。",
+    "questions": {
+      "1": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "覚える"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "覚えた"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "覚えている限り"
+          }
+        }
+      },
+      "2": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "新闻"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "アンケート調査"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "口碑"
+          }
+        }
+      },
+      "3": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "写了"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "通知"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "网上查"
+          }
+        }
+      },
+      "4": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "仅3处"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "想去"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "两年来"
+          }
+        }
+      }
+    }
+  },
+  "n2-l05-g04": {
+    "rule": "意味（A）： ⇒ 〜は普段と違っている。",
+    "questions": {
+      "1": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "开朗"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "忘物"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "注意深い不会犯错"
+          }
+        }
+      },
+      "2": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "那天不想练"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "去练了"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "特殊练"
+          }
+        }
+      },
+      "3": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "会赢"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "这种失败"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "做得好"
+          }
+        }
+      },
+      "4": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "车来"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "都不来"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "建议"
+          }
+        }
+      },
+      "5": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "出很多作业"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "不出"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "早结束"
+          }
+        }
+      }
+    }
+  },
+  "n2-l06-g01": {
+    "rule": "意味： ⇒ 範囲は〜だけでなく、さらに広い範囲のものも含む。",
+    "questions": {
+      "1": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "我镇不限"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "东京"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "全国范围错"
+          }
+        }
+      },
+      "2": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "人气作家"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "作者"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "国内不限"
+          }
+        }
+      },
+      "3": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "也"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "鱼"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "果物はみんな"
+          }
+        }
+      },
+      "4": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "我"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "其他人也"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "山中"
+          }
+        }
+      }
+    }
+  },
+  "n2-l06-g02": {
+    "rule": "意味： ⇒ 〜だけでなく、ほかにもある。〔书面语〕",
+    "questions": {
+      "1": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "不安定"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "だ"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "であるのみならず"
+          }
+        }
+      },
+      "2": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "我国不仅"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "我"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "人类"
+          }
+        }
+      },
+      "3": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "评价"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "也电影化"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "将卖"
+          }
+        }
+      }
+    }
+  },
+  "n2-l06-g03": {
+    "rule": "意味： ⇒ 〜だけでも十分なのに、さらにほかのことも加わる。",
+    "questions": {
+      "1": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "複雑"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "複雑なばかりか"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "で"
+          }
+        }
+      },
+      "2": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "我友人"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "男女"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "老幼"
+          }
+        }
+      },
+      "3": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "也私语"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "认真问"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "缺席少"
+          }
+        }
+      },
+      "4": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "也食欲"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "口渴"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "集中下降"
+          }
+        }
+      }
+    }
+  },
+  "n2-l06-g04": {
+    "rule": "意味： ⇒ 〜はもちろん、ほかもそうだ。〔书面语〕",
+    "questions": {
+      "1": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "医者患者都"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "医院医者"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "家族患者"
+          }
+        }
+      },
+      "2": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "家族本人"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "本人家族"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "我本人"
+          }
+        }
+      },
+      "3": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "社会人学生"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "外国人日本人"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "大人10代"
+          }
+        }
+      }
+    }
+  },
+  "n2-l06-g05": {
+    "rule": "意味： ⇒ 〜だけでなく、さらにいいこと・悪いことが重なる。",
+    "questions": {
+      "1": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "明るい上にまじめ"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "漫画"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "无爱好"
+          }
+        }
+      },
+      "2": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "我请客"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "被请客"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "被迫"
+          }
+        }
+      },
+      "3": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "还送回家"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "礼物贵"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "平时优"
+          }
+        }
+      }
+    }
+  },
+  "n2-l07-g01": {
+    "rule": "意味： ⇒ 〜の内容について、詳しい情報を得たり発表したりする。",
+    "questions": {
+      "1": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "年龄"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "個人情報"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "邮箱"
+          }
+        }
+      },
+      "2": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "に関して"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "に関する"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "関している"
+          }
+        }
+      },
+      "3": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "調べた"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "世話"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "拍照"
+          }
+        }
+      },
+      "4": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "データを見たい"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "意见"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "查了"
+          }
+        }
+      }
+    }
+  },
+  "n2-l07-g02": {
+    "rule": "意味： ⇒ 〜について議論・対立的行為・うわさなどをする。",
+    "questions": {
+      "1": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "我"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "我们讨论"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "父"
+          }
+        }
+      },
+      "2": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "说明"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "写在印刷"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "意见分裂"
+          }
+        }
+      },
+      "3": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "不关心"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "首相"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "对立继续"
+          }
+        }
+      }
+    }
+  },
+  "n2-l07-g03": {
+    "rule": "意味： ⇒ 〜がだれよりも上手だ。",
+    "questions": {
+      "1": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "身高"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "話のうまさ"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "年龄"
+          }
+        }
+      },
+      "2": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "料理"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "读书"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "好吃"
+          }
+        }
+      },
+      "3": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "不行"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "快"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "不输给任何人"
+          }
+        }
+      },
+      "4": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "博士级别"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "不关心"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "喜欢"
+          }
+        }
+      }
+    }
+  },
+  "n2-l07-g04": {
+    "rule": "意味（A）： ⇒ 〜を相手にしてあることをする・についてある感情を持つ。",
+    "questions": {
+      "1": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "易居?"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "提供何种支援"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "憧憬国?"
+          }
+        }
+      },
+      "2": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "像姐姐"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "可信"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "特别亲切"
+          }
+        }
+      },
+      "3": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "好"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "好の"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "施設の良さ对比"
+          }
+        }
+      },
+      "4": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "5月少"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "3月多"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "9月稍多"
+          }
+        }
+      }
+    }
+  },
+  "n2-l07-g05": {
+    "rule": "意味： ⇒ 〜の期待・要望がかなうように、あることをする。",
+    "questions": {
+      "1": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "ご期待"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "满足"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "不满"
+          }
+        }
+      },
+      "2": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "明亮"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "公园"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "增保育所"
+          }
+        }
+      },
+      "3": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "摘帽鞠躬"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "大声回应"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "满足样子"
+          }
+        }
+      }
+    }
+  },
+  "n2-l08-g01": {
+    "rule": "意味： ⇒ 〜という素材・基礎・土台などからあるものを作り出す。",
+    "questions": {
+      "1": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "日本実話"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "技术"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "导演"
+          }
+        }
+      },
+      "2": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "牛肉"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "毛皮"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "漢字→假名"
+          }
+        }
+      },
+      "3": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "实验"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "指导"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "脑中意象"
+          }
+        }
+      },
+      "4": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "改设计"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "变漂亮"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "巴士增多"
+          }
+        }
+      }
+    }
+  },
+  "n2-l08-g02": {
+    "rule": "意味： ⇒ 〜を基準と考えてあることをする。",
+    "questions": {
+      "1": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "アンケート結果"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "市民"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "税金"
+          }
+        }
+      },
+      "2": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "企業精神"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "社长"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "资金"
+          }
+        }
+      },
+      "3": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "合格了"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "难合格"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "决定合否"
+          }
+        }
+      }
+    }
+  },
+  "n2-l08-g03": {
+    "rule": "意味： ⇒ 〜に合うように・それからはずれないようにあることをする。",
+    "questions": {
+      "1": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "プログラム"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "平常年"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "学年"
+          }
+        }
+      },
+      "2": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "沿って"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "沿った"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "沿っての"
+          }
+        }
+      },
+      "3": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "带玩具"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "定行事"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "开门"
+          }
+        }
+      }
+    }
+  },
+  "n2-l08-g04": {
+    "rule": "意味： ⇒ この影響を受けてあることをする／〜の状況であることをする。",
+    "questions": {
+      "1": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "係"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "宠物"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "新母亲下"
+          }
+        }
+      },
+      "2": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "国の保護"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "游客"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "村民"
+          }
+        }
+      },
+      "3": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "习钢琴中"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "变上手"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "变喜欢"
+          }
+        }
+      },
+      "4": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "实力"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "每天努力"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "安心"
+          }
+        }
+      }
+    }
+  },
+  "n2-l08-g05": {
+    "rule": "意味： ⇒ 〜という特定の対象に合うように作られている。",
+    "questions": {
+      "1": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "我"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "高齢者"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "南"
+          }
+        }
+      },
+      "2": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "初めての人"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "教室用"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "外国"
+          }
+        }
+      },
+      "3": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "人气"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "有趣"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "作られたもの"
+          }
+        }
+      }
+    }
+  },
+  "n2-l09-g01": {
+    "rule": "意味： ⇒ 一方が変化するのと一緒に、もう一方も変化する。",
+    "questions": {
+      "1": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "毕业"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "大人になる"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "社会人"
+          }
+        }
+      },
+      "2": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "年をとる"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "90岁"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "我结婚"
+          }
+        }
+      },
+      "3": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "变化"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "上がる"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "超30度"
+          }
+        }
+      },
+      "4": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "朋友增加"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "楽しい"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "旅行"
+          }
+        }
+      },
+      "5": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "热闹"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "变得热闹"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "聚集"
+          }
+        }
+      }
+    }
+  },
+  "n2-l09-g02": {
+    "rule": "意味： ⇒ 一方が変化するのと一緒に、もう一方も変化する・変化させる。〔书面语〕",
+    "questions": {
+      "1": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "なる"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "なった"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "なっている"
+          }
+        }
+      },
+      "2": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "雨が降る"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "雨多"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "量变"
+          }
+        }
+      },
+      "3": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "当课长"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "涨3万"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "地位上升"
+          }
+        }
+      }
+    }
+  },
+  "n2-l09-g03": {
+    "rule": "意味： ⇒ 〜が変われば結果も変わる・〜によって決まる。",
+    "questions": {
+      "1": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "结果"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "出せるかどうか"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "已出"
+          }
+        }
+      },
+      "2": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "好天气"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "雨天"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "天候"
+          }
+        }
+      },
+      "3": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "次第"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "次第で"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "では"
+          }
+        }
+      },
+      "4": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "也许进准决"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "重复"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "结果变"
+          }
+        }
+      },
+      "5": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "现在工作"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "下份好工作"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "下份条件"
+          }
+        }
+      }
+    }
+  },
+  "n2-l09-g04": {
+    "rule": "意味： ⇒ 〜に合わせて変える・変わる。",
+    "questions": {
+      "1": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "男女"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "兼职全职"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "经验年数"
+          }
+        }
+      },
+      "2": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "献立表"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "喜好"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "主意"
+          }
+        }
+      },
+      "3": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "换衣服"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "不出"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "留守长"
+          }
+        }
+      },
+      "4": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "变色"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "色深"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "不固定"
+          }
+        }
+      }
+    }
+  },
+  "n2-l09-g05": {
+    "rule": "意味： ⇒ 〜すると、いつも必ずそういう気持ちになる。",
+    "questions": {
+      "1": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "开着"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "聞く"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "聞いた"
+          }
+        }
+      },
+      "2": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "发现"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "想起母亲"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "收起来"
+          }
+        }
+      }
+    }
+  },
+  "n2-l10-g01": {
+    "rule": "意味： ⇒ 〜や、ほかの〜などの例があるように、いろいろだ。",
+    "questions": {
+      "1": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "悔しい"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "残念だ"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "腹が立った"
+          }
+        }
+      },
+      "2": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "犬やら猫やら"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "动植物"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "数量"
+          }
+        }
+      },
+      "3": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "引っ越し/暑い"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "宿題/体調"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "バイト/レポート"
+          }
+        }
+      }
+    }
+  },
+  "n2-l10-g02": {
+    "rule": "意味： ⇒ 〜という言い方もできるし、ほかの〜という言い方もできる。",
+    "questions": {
+      "1": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "頑固"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "マイペース"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "医者"
+          }
+        }
+      },
+      "2": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "自信がない"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "可断言"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "应短"
+          }
+        }
+      },
+      "3": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "好人坏人"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "男女"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "聪明/狡猾"
+          }
+        }
+      }
+    }
+  },
+  "n2-l10-g03": {
+    "rule": "意味： ⇒ 〜を例にとっても、ほかの〜を例にとっても同じことが言える。",
+    "questions": {
+      "1": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "平日/夜"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "毎日/有时"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "平日/休日"
+          }
+        }
+      },
+      "2": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "哪个"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "建议参加"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "会费不变"
+          }
+        }
+      },
+      "3": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "都要花钱"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "出去了"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "喜欢吗"
+          }
+        }
+      }
+    }
+  },
+  "n2-l10-g04": {
+    "rule": "意味： ⇒ いくつかの例の後につけて、例をまとめる。",
+    "questions": {
+      "1": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "仅地铁"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "地铁巴士等"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "和"
+          }
+        }
+      },
+      "2": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "想去"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "去过"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "所を旅行"
+          }
+        }
+      },
+      "3": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "といった"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "という"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "といって"
+          }
+        }
+      }
+    }
+  },
+  "n2-l11-g01": {
+    "rule": "意味： ⇒ 〜がどうかは問題ではなく、どれにも同じことが言える。",
+    "questions": {
+      "1": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "水木"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "周末"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "曜日"
+          }
+        }
+      },
+      "2": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "工资"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "经验有无"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "未成年"
+          }
+        }
+      },
+      "3": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "谁都能"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "何时"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "何地"
+          }
+        }
+      },
+      "4": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "尤其冬山"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "登山喜欢"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "各季都喜欢"
+          }
+        }
+      }
+    }
+  },
+  "n2-l11-g02": {
+    "rule": "意味： ⇒ 〜には関係なく同じようになる。",
+    "questions": {
+      "1": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "年龄"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "高龄"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "天候"
+          }
+        }
+      },
+      "2": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "一律500"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "有贵便宜"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "哪个好"
+          }
+        }
+      },
+      "3": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "不参加"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "参加与否"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "仅参加"
+          }
+        }
+      }
+    }
+  },
+  "n2-l11-g03": {
+    "rule": "意味： ⇒ 普通なら気にする〜のことを気にしないで行動する。",
+    "questions": {
+      "1": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "人が見ている"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "暗"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "无人"
+          }
+        }
+      },
+      "2": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "请回"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "可回"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "已经回了"
+          }
+        }
+      },
+      "3": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "继续练"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "建议"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "命令"
+          }
+        }
+      },
+      "4": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "欢迎"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "去钓鱼"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "必须出"
+          }
+        }
+      }
+    }
+  },
+  "n2-l11-g04": {
+    "rule": "意味： ⇒ ほかにもっと強調したいことがあるので、〜はとりあえず考えないでおく。",
+    "questions": {
+      "1": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "大人应倾听"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "连休"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "睡脸"
+          }
+        }
+      },
+      "2": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "日本造字"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "48字"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "早学平假名"
+          }
+        }
+      },
+      "3": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "是否赞成"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "不能赞成吗"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "不能赞成"
+          }
+        }
+      },
+      "4": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "没我国热"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "湿度高讨厌"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "有空调"
+          }
+        }
+      },
+      "5": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "尽力"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "别在意"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "紧张"
+          }
+        }
+      }
+    }
+  },
+  "n2-l11-g05": {
+    "rule": "意味： ⇒ ほかにもっと大切なことがあるので、〜はとりあえず話題からはずす。",
+    "questions": {
+      "1": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "品质"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "好品质"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "坏品质"
+          }
+        }
+      },
+      "2": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "定日程"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "准备完"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "想参加"
+          }
+        }
+      },
+      "3": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "喝很多"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "先干杯"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "点什么"
+          }
+        }
+      }
+    }
+  },
+  "n2-l12-g01": {
+    "rule": "意味： ⇒ 絶対〜ない・〜とは考えられない。",
+    "questions": {
+      "1": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "暇"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "暇だ"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "暇な"
+          }
+        }
+      },
+      "2": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "会来"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "不会来"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "不知道"
+          }
+        }
+      },
+      "3": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "わけがない"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "ではない"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "というわけ"
+          }
+        }
+      },
+      "4": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "帰れる"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "帰れそう"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "帰れない"
+          }
+        }
+      }
+    }
+  },
+  "n2-l12-g02": {
+    "rule": "意味： ⇒ 〜の程度ではなく、実際はそれとは大違いだ。",
+    "questions": {
+      "1": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "静かの"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "静かだ"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "静かなどころか"
+          }
+        }
+      },
+      "3": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "扇風機もない"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "有电视"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "没车"
+          }
+        }
+      },
+      "4": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "国内多次"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "国内也难"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "想去"
+          }
+        }
+      }
+    }
+  },
+  "n2-l12-g03": {
+    "rule": "意味： ⇒ 絶対ない。",
+    "questions": {
+      "1": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "しない"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "できる"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "辞める"
+          }
+        }
+      }
+    }
+  },
+  "n2-l12-g04": {
+    "rule": "意味： ⇒ 全部〜とは言えない・特に〜ということではない。",
+    "questions": {
+      "1": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "现在闲"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "总忙"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "并非总闲"
+          }
+        }
+      },
+      "2": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "不懂"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "未必理解"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "不能理解"
+          }
+        }
+      },
+      "3": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "见过"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "没见过但觉优"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "不认识"
+          }
+        }
+      },
+      "4": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "知道"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "并非全知"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "不知"
+          }
+        }
+      }
+    }
+  },
+  "n2-l12-g05": {
+    "rule": "意味： ⇒ ある条件が整えば必ず〜ということになるとは言えない。",
+    "questions": {
+      "1": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "安ければいい"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "安いといい"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "安くても"
+          }
+        }
+      },
+      "2": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "也许卖"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "可能卖"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "必ず売れる"
+          }
+        }
+      },
+      "3": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "辞めれば済"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "不辞也可"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "该辞"
+          }
+        }
+      },
+      "4": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "20分"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "未必早到"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "1500円"
+          }
+        }
+      }
+    }
+  },
+  "n2-l13-g01": {
+    "rule": "意味： ⇒ 〜という言葉を説明・定義する。〔硬い言い方〕",
+    "questions": {
+      "1": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "わけ"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "もの"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "意味"
+          }
+        }
+      },
+      "2": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "ということである"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "というもの"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "というの"
+          }
+        }
+      },
+      "3": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "ことである"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "意味"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "の"
+          }
+        }
+      },
+      "4": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "材料意义"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "正月ごちそう定义"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "母亲做的"
+          }
+        }
+      }
+    }
+  },
+  "n2-l13-g02": {
+    "rule": "意味： ⇒ 話題に出てきた〜という言葉を取り上げ、それに関連のある別の話に導く。",
+    "questions": {
+      "2": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "买了"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "カメラ→写真"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "奖"
+          }
+        }
+      },
+      "4": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "远是远但…"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "不那么远"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "不那么近"
+          }
+        }
+      }
+    }
+  },
+  "n2-l13-g03": {
+    "rule": "意味： ⇒ 〜という言葉からすぐに思いつくことを言う。",
+    "questions": {
+      "1": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "现在美"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "刺"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "何时开"
+          }
+        }
+      },
+      "2": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "…でもいいでしょうか"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "いいです"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "いいですよ"
+          }
+        }
+      }
+    }
+  },
+  "n2-l13-g04": {
+    "rule": "意味： ⇒ 〜の話題・〜に関連することに対しては、普通とは違う態度になることを強調する。",
+    "questions": {
+      "1": {
+        "answer": "c",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "知道多"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "想母亲"
+          },
+          "c": {
+            "verdict": "correct",
+            "reason": "变热心"
+          }
+        }
+      },
+      "2": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "花钱"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "喜欢"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "每天骑"
+          }
+        }
+      },
+      "3": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "困"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "谈钱皱眉"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "不关心"
+          }
+        }
+      },
+      "4": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "好营业"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "眼神变"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "无干劲"
+          }
+        }
+      }
+    }
+  },
+  "n2-l13-g05": {
+    "rule": "意味： ⇒ 〜の程度が普通ではないということを強調する。",
+    "questions": {
+      "1": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "悔しさ"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "残念だ"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "悲しい"
+          }
+        }
+      },
+      "2": {
+        "answer": "a",
+        "options": {
+          "a": {
+            "verdict": "correct",
+            "reason": "あの時の緊張"
+          },
+          "b": {
+            "verdict": "wrong",
+            "reason": "过去句"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "语序"
+          }
+        }
+      },
+      "3": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "非常寂"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "言葉にならない"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "想不起"
+          }
+        }
+      },
+      "4": {
+        "answer": "b",
+        "options": {
+          "a": {
+            "verdict": "wrong",
+            "reason": "比国好"
+          },
+          "b": {
+            "verdict": "correct",
+            "reason": "难忍"
+          },
+          "c": {
+            "verdict": "wrong",
+            "reason": "没那么"
+          }
+        }
+      }
+    }
+  }
+}

@@ -23,6 +23,7 @@ from strip_book_footers import is_footer_line  # noqa: E402
 OUT_HTML = REVIEW_DIR / "index.html"
 ANSWERS_JSON = REVIEW_DIR / "grammar_exercise_answers.json"
 EXPERT_ANSWERS_JSON = REVIEW_DIR / "grammar_exercise_answers_expert.json"
+ANALYSIS_JSON = REVIEW_DIR / "grammar_exercise_analysis.json"
 HIRAGANA_RE = re.compile(r"[\u3040-\u30ff]")
 IMPORTANCE_JSON = BASE / "jlpt_grammar_importance.json"
 IMPORTANCE_FALLBACK = BASE / "n1_grammar_importance.json"
@@ -170,6 +171,13 @@ def body_fragment_to_html(text: str, *, strip_cn: bool = False) -> str:
 
 EX_ANS_MISSING_BADGE = (
     '<span class="ex-ans-missing" title="尚无标准答案，可选但无法自动判对错">未收录</span>'
+)
+EX_SHOW_ANSWERS_BTN = (
+    '<button type="button" class="ex-show-answers">显示参考答案与解析</button>'
+)
+EX_SHOW_ANSWERS_TOOLBAR = f'<p class="exercise-toolbar">{EX_SHOW_ANSWERS_BTN}</p>'
+EX_SHOW_ANSWERS_TOOLBAR_BOTTOM = (
+    f'<p class="exercise-toolbar exercise-toolbar-bottom">{EX_SHOW_ANSWERS_BTN}</p>'
 )
 
 
@@ -341,9 +349,12 @@ def answers_for_point(
     bodies: dict[str, dict[str, str]],
     exercise_answers: dict[str, dict[str, str]],
 ) -> dict[str, str]:
+    aid = pt["anchor_id"]
+    if aid in exercise_answers:
+        return exercise_answers[aid]
     ex_rel, ex_gnum = resolve_exercise_key(pt, bodies)
     ex_key = exercise_answer_key(pt, ex_rel, ex_gnum)
-    return exercise_answers.get(ex_key) or exercise_answers.get(pt["anchor_id"], {})
+    return exercise_answers.get(ex_key, {})
 
 
 def load_points() -> list[dict]:
@@ -352,18 +363,21 @@ def load_points() -> list[dict]:
 
 
 def load_exercise_answers() -> dict[str, dict[str, str]]:
-    result: dict[str, dict[str, str]] = {}
-    if ANSWERS_JSON.exists():
-        data = json.loads(ANSWERS_JSON.read_text(encoding="utf-8"))
-        for k, v in data.items():
-            result[k] = {str(q): str(a).lower() for q, a in v.items()}
+    """练习答案以 grammar_exercise_answers_expert.json 为准（全量重审，覆盖 OCR）。"""
     if EXPERT_ANSWERS_JSON.exists():
         expert = json.loads(EXPERT_ANSWERS_JSON.read_text(encoding="utf-8"))
-        for k, v in expert.items():
-            merged = result.get(k, {})
-            merged.update({str(q): str(a).lower() for q, a in v.items()})
-            result[k] = merged
-    return result
+        return {k: {str(q): str(a).lower() for q, a in v.items()} for k, v in expert.items()}
+    if ANSWERS_JSON.exists():
+        data = json.loads(ANSWERS_JSON.read_text(encoding="utf-8"))
+        return {k: {str(q): str(a).lower() for q, a in v.items()} for k, v in data.items()}
+    return {}
+
+
+def load_exercise_analysis() -> dict[str, dict]:
+    if not ANALYSIS_JSON.exists():
+        return {}
+    raw = json.loads(ANALYSIS_JSON.read_text(encoding="utf-8"))
+    return raw
 
 
 def load_importance() -> dict[str, dict]:
@@ -474,8 +488,10 @@ def cards_html(
         if ex_html:
             ex_block = (
                 f'<section class="exercises"><h3>练习题（【{gnum}】）</h3>'
-                f'<p class="exercise-answer-ref">对照答案：N1 原书 p.180–185 · N2 原书 p.295–327</p>'
-                f"{ex_html}</section>"
+                f"{EX_SHOW_ANSWERS_TOOLBAR}"
+                f'<p class="exercise-answer-ref">原书答案页：N1 p.180–185 · N2 p.295–327</p>'
+                f"{ex_html}"
+                f"{EX_SHOW_ANSWERS_TOOLBAR_BOTTOM}</section>"
             )
         imp = importance.get(aid, {})
         stars = int(imp.get("stars") or 0)
@@ -550,6 +566,8 @@ def build_html(
     n2 = sum(1 for p in points if p["level"] == "N2")
     lesson_titles_json = json.dumps(lesson_titles, ensure_ascii=False)
     exercise_answers_json = json.dumps(exercise_answers or {}, ensure_ascii=False)
+    exercise_analysis = load_exercise_analysis()
+    exercise_analysis_json = json.dumps(exercise_analysis, ensure_ascii=False)
     lesson_options = lesson_filter_options_html(lesson_titles)
 
     rows: list[str] = []
@@ -574,14 +592,6 @@ def build_html(
             f'<td class="idx-lesson"><a class="go" href="#" data-aid="{aid}">{lesson}</a></td></tr>'
         )
 
-    ex_tot, ex_ans = ex_answer_totals or (0, 0)
-    ex_miss = ex_tot - ex_ans
-    ex_summary = ""
-    if ex_tot:
-        ex_summary = (
-            f" · 练习答案 {ex_ans}/{ex_tot}"
-            f'<span class="title-ex-missing">（缺 {ex_miss}）</span>'
-        )
     cards = cards_html(points, bodies, lesson_exercises, importance, lesson_titles)
     ui_css = UI_CSS.read_text(encoding="utf-8") if UI_CSS.exists() else ""
     ui_js = UI_JS.read_text(encoding="utf-8") if UI_JS.exists() else ""
@@ -1092,7 +1102,7 @@ a.go:hover {{ text-decoration: underline; }}
     <div class="toolbar-row toolbar-row-head">
       <h1 class="toolbar-title" title="重要度★＝真题55%+网评45%（悬停★可见）">
         JLPT新完全掌握语法 N1/N2
-        <span class="title-sub">{len(points)} 条 · N1 {n1} · N2 {n2}{ex_summary}</span>
+        <span class="title-sub">{len(points)} 条 · N1 {n1} · N2 {n2}</span>
       </h1>
       <div class="sync-toolbar" id="sync-toolbar" hidden>
         <div class="sync-toolbar-row">
@@ -1141,6 +1151,7 @@ a.go:hover {{ text-decoration: underline; }}
       <button type="button" class="pass-clear-btn" data-clear-pass title="清除当前遍全部记录">清除本遍</button>
       <div class="toolbar-group toolbar-group-review">
         <span id="review-stats" class="review-stats"></span>
+        <label class="review-shuffle-toggle" title="勾选后点击选项会红绿判对错（答案可能有误）"><input type="checkbox" id="exercise-grade"> 练习判对错</label>
         <label class="review-shuffle-toggle" title="卡片复习打乱顺序"><input type="checkbox" id="review-shuffle" checked> 乱序</label>
         <button type="button" class="filter-btn" id="btn-review">卡片复习</button>
         <button type="button" class="filter-btn" id="btn-review-weak">待复习</button>
@@ -1202,6 +1213,7 @@ a.go:hover {{ text-decoration: underline; }}
 <script>
 const LESSON_TITLES = {lesson_titles_json};
 window.GRAMMAR_EXERCISE_ANSWERS = {exercise_answers_json};
+window.GRAMMAR_EXERCISE_ANALYSIS = {exercise_analysis_json};
 </script>
 <script>
 (function() {{
@@ -1494,6 +1506,10 @@ def main() -> None:
         ans = answers_for_point(p, bodies, exercise_answers)
         if ans:
             answers_by_anchor[p["anchor_id"]] = ans
+    import validate_exercise_answers
+
+    validate_exercise_answers.main()
+
     html_out = build_html(
         points,
         bodies,

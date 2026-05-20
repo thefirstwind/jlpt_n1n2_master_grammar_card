@@ -9,7 +9,12 @@
 | [index.html](index.html) | **打开此文件** 即可复习（Chrome 等） |
 | `build_grammar_review_html.py` | 从校对版生成 HTML |
 | `grammar_review_ui.js` / `grammar_review_ui.css` | Anki 式卡片复习、3遍进度 localStorage（构建时内嵌进 HTML） |
-| `grammar_exercise_answers_expert.json` | 专家补全的练习答案（与 OCR 答案合并） |
+| `grammar_exercise_answers_expert.json` | 练习参考答案（AI+规则校验，**非官方**；构建时嵌入） |
+| `validate_exercise_answers.py` | 按课文「注意」自动修正明显违规项（构建时自动运行） |
+| `consensus_exercise_answers.py` | 合并专家 A/B/C → 多数决答案 |
+| `grammar_exercise_consensus_report.json` | 三专家分歧题一览（供人工复核） |
+| `_expert_A_snapshot.json` | 专家 A（首轮全量作答）快照 |
+| `_reanswer_B_*.json` / `_reanswer_C_*.json` | 专家 B、C 独立作答 |
 
 ## 使用
 

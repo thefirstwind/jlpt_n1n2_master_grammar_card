@@ -509,6 +509,33 @@ body.review-open .toolbar {
   font-size: 1.05rem;
 }
 .flip-back .example { font-size: 1.02rem; }
+.exercise-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  margin: 0 0 0.35rem;
+  font-size: 0.8rem;
+}
+.exercise-toolbar .ex-show-answers {
+  padding: 0.2rem 0.55rem;
+  font-size: 0.78rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--card);
+  cursor: pointer;
+}
+.exercise-toolbar .ex-show-answers:hover {
+  background: #f0ede6;
+}
+.exercise-toolbar-bottom {
+  margin-top: 0.75rem;
+  margin-bottom: 0;
+}
+.exercise-toolbar .exercise-hint {
+  color: #9a3412;
+  font-size: 0.75rem;
+}
 .exercise-answer-ref {
   font-size: 0.75rem;
   color: var(--muted);
@@ -564,6 +591,35 @@ body.review-open .toolbar {
 .exercise-item .options li.ex-picked {
   background: #e0e7ff;
   border: 1px solid #a5b4fc;
+}
+.ex-analysis {
+  margin-top: 0.65rem;
+  padding: 0.65rem 0.75rem;
+  background: #f8fafc;
+  border-left: 3px solid #b45309;
+  border-radius: 0 6px 6px 0;
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+.ex-analysis[hidden] {
+  display: none;
+}
+.ex-analysis-rule {
+  margin: 0 0 0.5rem;
+}
+.ex-analysis-opt {
+  margin: 0.35rem 0 0;
+}
+.ex-analysis-opt.ex-opt-correct .ex-analysis-tag {
+  color: #15803d;
+  font-weight: 700;
+}
+.ex-analysis-opt.ex-opt-wrong .ex-analysis-tag {
+  color: #b45309;
+  font-weight: 600;
+}
+.flip-back .ex-analysis {
+  font-size: 0.82rem;
 }
 .review-actions {
   display: grid;
