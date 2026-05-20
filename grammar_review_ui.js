@@ -5,6 +5,7 @@
   const SHUFFLE_PREF_KEY = "shinkanzen_grammar_shuffle_v2";
   const PASS_PREF_KEY = "shinkanzen_grammar_current_pass";
   const LAST_PLACE_KEY = "shinkanzen_grammar_last_place";
+  const TOOLBAR_EXPAND_KEY = "shinkanzen_grammar_toolbar_expanded";
   const TARGET_PASSES = 3;
 
   const STATUS = { NEW: "new", HARD: "hard", GOOD: "good", LEARNING: "learning" };
@@ -499,6 +500,7 @@
       return;
     }
     deckIndex = 0;
+    setToolbarExpanded(false);
     overlay.classList.add("open");
     document.body.style.overflow = "hidden";
     updateUndoButton();
@@ -667,6 +669,33 @@
       await window.__grammarReviewPushOnly(true);
     }
   }
+
+  function setToolbarExpanded(expanded) {
+    document.body.classList.toggle("toolbar-expanded", expanded);
+    document.body.classList.toggle("toolbar-collapsed", !expanded);
+    try {
+      localStorage.setItem(TOOLBAR_EXPAND_KEY, expanded ? "1" : "0");
+    } catch (_) {}
+    const btn = document.getElementById("btn-toolbar-toggle");
+    if (btn) {
+      btn.setAttribute("aria-expanded", expanded ? "true" : "false");
+      btn.textContent = expanded ? "收起" : "展开";
+      btn.title = expanded ? "收起页头，留出复习空间" : "展开页头说明与筛选";
+    }
+  }
+
+  function loadToolbarPref() {
+    let expanded = false;
+    try {
+      expanded = localStorage.getItem(TOOLBAR_EXPAND_KEY) === "1";
+    } catch (_) {}
+    setToolbarExpanded(expanded);
+  }
+
+  loadToolbarPref();
+  document.getElementById("btn-toolbar-toggle")?.addEventListener("click", () => {
+    setToolbarExpanded(document.body.classList.contains("toolbar-collapsed"));
+  });
 
   loadShufflePref();
   loadPassPref();

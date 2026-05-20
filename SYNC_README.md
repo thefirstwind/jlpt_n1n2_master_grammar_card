@@ -58,6 +58,38 @@ GRAMMAR_SYNC_BASE_URL=https://xxx.workers.dev
 
 或 `SUPABASE_URL` + `SUPABASE_ANON_KEY`，然后重建 HTML。
 
+## iPad 同步失败「无法连接同步服务」
+
+Mac 能同步、**仅 iPad 不行**时，常见有两类原因：
+
+### 1. Safari 跨站拦截（GitHub Pages + workers.dev）
+
+复习页在 `github.io`，同步 API 在 `workers.dev`，iPad Safari 的「防止跨站跟踪」可能直接拦掉 `fetch`。
+
+**可先试（最快）**
+
+1. iPad **Safari** 打开：`https://jlptn1n2mastergrammarcard.jlptn1n2mastergrammarcard.workers.dev/health`  
+   - 应显示 `ok`  
+   - 若**打不开**：多为网络/地区限制（见下），不是页面配置问题  
+   - 若**能打开**但复习页仍失败：  
+     **设置 → Safari → 隐私** → 暂时关闭 **「防止跨站跟踪」** → 回到复习页强刷后点「立即同步」
+
+**长期推荐：Cloudflare Pages 同源部署**（API 与页面同域名，iPad 最稳）
+
+```bash
+cd 语法复习
+npx wrangler pages deploy . --config wrangler.pages.toml
+# 在 Cloudflare 控制台为该 Pages 项目绑定 KV：SYNC_KV（id 与 worker 相同）
+python enable_cloud_sync.py --same-origin
+# 用 Pages 给出的 *.pages.dev 地址打开复习页（不要用 github.io）
+```
+
+### 2. 网络访问不到 workers.dev
+
+部分移动网络/地区无法访问 `*.workers.dev`。请在 iPad 用 Safari 直接打开上面的 `/health` 自测；必要时换 Wi‑Fi、热点，或为 Worker 绑定**自己的域名**（Cloudflare 控制台 → Worker → Custom Domains）。
+
+---
+
 ## 故障：同步失败 `Failed to fetch`
 
 1. **不要用双击打开** `index.html`（`file://` 下浏览器会拦截对 Worker 的请求）。请运行 `./serve.sh` 后用 `http://127.0.0.1:8765/index.html`，或使用 **GitHub Pages**。

@@ -25,8 +25,10 @@ body {
   flex-shrink: 0;
   z-index: 100;
   background: rgba(246,245,242,.95); backdrop-filter: blur(8px);
-  border-bottom: 1px solid var(--border); padding: .75rem 1rem;
+  border-bottom: 1px solid var(--border);
+  padding: .75rem 1rem;
 }
+body.toolbar-collapsed .toolbar { padding: .35rem .55rem .4rem; }
 .toolbar-top {
   display: flex;
   align-items: flex-start;
@@ -34,19 +36,71 @@ body {
   gap: 0.75rem 1.25rem;
   margin-bottom: 0.5rem;
 }
+body.toolbar-collapsed .toolbar-top {
+  align-items: center;
+  margin-bottom: 0.2rem;
+  gap: 0.35rem 0.6rem;
+}
 .toolbar-brand { flex: 1; min-width: 0; }
-.toolbar-brand h1 { margin: 0 0 .35rem; font-size: 1.15rem; font-weight: 700; }
-.toolbar-brand .meta { font-size: .8rem; color: var(--muted); margin: 0; }
+.toolbar-brand h1 {
+  margin: 0 0 .35rem; font-size: 1.15rem; font-weight: 700;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+body.toolbar-collapsed .toolbar-brand h1 { margin: 0; font-size: .92rem; }
+.toolbar-brand .meta { font-size: .8rem; color: var(--muted); margin: 0; line-height: 1.35; }
+body.toolbar-collapsed .toolbar-brand .meta { display: none; }
 .toolbar h1 { margin: 0 0 .5rem; font-size: 1.15rem; font-weight: 700; }
 .toolbar .meta { font-size: .8rem; color: var(--muted); margin-bottom: .5rem; }
+.toolbar-toggle {
+  flex-shrink: 0;
+  padding: .22rem .45rem;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: var(--card);
+  color: var(--muted);
+  cursor: pointer;
+  font-size: .72rem;
+  line-height: 1.2;
+}
+.toolbar-toggle:hover { color: var(--text); border-color: #c5c9d2; }
+.toolbar-controls-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+body.toolbar-collapsed .toolbar-controls-wrap {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.28rem;
+}
 .controls { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
+body.toolbar-collapsed .controls { gap: .28rem; }
 #q {
   flex: 1; min-width: 160px; padding: .45rem .65rem;
   border: 1px solid var(--border); border-radius: 6px; font-size: .95rem;
 }
+body.toolbar-collapsed #q {
+  min-width: 88px; max-width: min(42vw, 220px);
+  padding: .28rem .45rem; font-size: .82rem;
+}
 .filter-btn {
   padding: .4rem .75rem; border: 1px solid var(--border); border-radius: 6px;
   background: var(--card); cursor: pointer; font-size: .85rem;
+}
+body.toolbar-collapsed .filter-btn {
+  padding: .24rem .45rem; font-size: .76rem; border-radius: 5px;
+}
+body.toolbar-collapsed .lesson-select {
+  padding: .24rem .35rem; font-size: .76rem; max-width: min(38vw, 160px);
+}
+body.toolbar-collapsed .review-shuffle-toggle {
+  padding: .22rem .38rem; font-size: .74rem;
+}
+body.toolbar-collapsed .review-filter-btn { display: none; }
+body.toolbar-collapsed .index-hint { display: none; }
+body.toolbar-collapsed .index-panel h2 {
+  padding: .3rem .65rem; font-size: .78rem;
 }
 .filter-btn.active { background: var(--text); color: #fff; border-color: var(--text); }
 .lesson-select {
@@ -305,6 +359,44 @@ a.go:hover { text-decoration: underline; }
   border-top: 1px dashed var(--border);
   font-size: 0.82rem;
 }
+body.toolbar-collapsed .pass-toolbar {
+  width: auto;
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+  gap: 0.28rem;
+  font-size: 0.76rem;
+}
+body.toolbar-collapsed .pass-toolbar-label { display: none; }
+body.toolbar-collapsed .pass-btn,
+body.toolbar-collapsed .pass-clear-btn {
+  padding: 0.22rem 0.42rem;
+  font-size: 0.74rem;
+  min-width: 2.2rem;
+}
+body.toolbar-collapsed .pass-progress {
+  font-size: 0.7rem;
+  gap: 0.35rem;
+}
+body.toolbar-collapsed .pass-incomplete-toggle {
+  font-size: 0.72rem;
+}
+body.toolbar-collapsed .sync-toolbar {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  max-width: none;
+  gap: 0.25rem;
+}
+body.toolbar-collapsed .sync-input {
+  width: 6.5rem;
+  padding: 0.24rem 0.4rem;
+  font-size: 0.76rem;
+}
+body.toolbar-collapsed .sync-status {
+  max-width: 10rem;
+  font-size: 0.65rem;
+}
 .pass-toolbar-label { color: var(--muted); white-space: nowrap; }
 .pass-btn {
   padding: 0.3rem 0.55rem;
@@ -468,13 +560,13 @@ a.go:hover { text-decoration: underline; }
   justify-content: center;
   padding: 1.25rem;
 }
-#review-overlay.open { display: flex; }
+#review-overlay.open { display: flex; padding: 0.5rem; }
 .review-panel {
   background: var(--card);
   border-radius: 16px;
   width: min(920px, 96vw);
-  height: min(92vh, 880px);
-  max-height: 92vh;
+  height: min(96vh, 900px);
+  max-height: 96vh;
   display: flex;
   flex-direction: column;
   box-shadow: 0 16px 48px rgba(0, 0, 0, 0.22);
@@ -484,9 +576,9 @@ a.go:hover { text-decoration: underline; }
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
-  padding: 0.85rem 1.25rem;
+  padding: 0.5rem 0.85rem;
   border-bottom: 1px solid var(--border);
-  font-size: 0.95rem;
+  font-size: 0.88rem;
   flex-shrink: 0;
 }
 .review-top-actions {
@@ -596,13 +688,14 @@ tr.rv-hidden { display: none; }
 
 </style>
 </head>
-<body>
+<body class="toolbar-collapsed">
 <header class="toolbar">
   <div class="toolbar-top">
     <div class="toolbar-brand">
-      <h1>新完全掌握 · N1/N2 语法复习</h1>
+      <h1 title="新完全掌握 N1/N2 语法复习 · 共 238 条（N1 97 · N2 141）· 三遍复习 · 重要度★＝真题55%+网评45%">N1/N2 语法</h1>
       <p class="meta">共 238 条（N1 97 · N2 141）· 五十音 · 重要度★＝<span class="meta-hint" title="55% 本地27套N1真题 + 45% 网上分档综合评定">真题55%+网评45%</span> · 三遍复习 · 填<strong>同步邮箱</strong>可跨设备同步</p>
     </div>
+    <button type="button" class="toolbar-toggle" id="btn-toolbar-toggle" title="展开页头说明与筛选" aria-expanded="false">展开</button>
     <div class="sync-toolbar" id="sync-toolbar" hidden>
       <div class="sync-toolbar-row">
         <span class="sync-toolbar-label">同步</span>
@@ -612,6 +705,7 @@ tr.rv-hidden { display: none; }
       <span id="sync-status" class="sync-status" title=""></span>
     </div>
   </div>
+  <div class="toolbar-controls-wrap">
   <div class="controls">
     <input type="search" id="q" placeholder="搜索语法（如：が早いか、にあって）…" autocomplete="off">
     <button type="button" class="filter-btn active" data-level="ALL">全部</button>
@@ -643,6 +737,7 @@ tr.rv-hidden { display: none; }
       <input type="checkbox" id="pass-incomplete" checked> 仅本遍未完成
     </label>
     <button type="button" class="pass-clear-btn" data-clear-pass title="清除当前遍全部记录">清除第1遍</button>
+  </div>
   </div>
 </header>
 <main class="layout">
@@ -3547,6 +3642,7 @@ window.GRAMMAR_SYNC_CONFIG = {"type": "http", "baseUrl": "https://jlptn1n2master
   const SHUFFLE_PREF_KEY = "shinkanzen_grammar_shuffle_v2";
   const PASS_PREF_KEY = "shinkanzen_grammar_current_pass";
   const LAST_PLACE_KEY = "shinkanzen_grammar_last_place";
+  const TOOLBAR_EXPAND_KEY = "shinkanzen_grammar_toolbar_expanded";
   const TARGET_PASSES = 3;
 
   const STATUS = { NEW: "new", HARD: "hard", GOOD: "good", LEARNING: "learning" };
@@ -4210,6 +4306,33 @@ window.GRAMMAR_SYNC_CONFIG = {"type": "http", "baseUrl": "https://jlptn1n2master
     }
   }
 
+  function setToolbarExpanded(expanded) {
+    document.body.classList.toggle("toolbar-expanded", expanded);
+    document.body.classList.toggle("toolbar-collapsed", !expanded);
+    try {
+      localStorage.setItem(TOOLBAR_EXPAND_KEY, expanded ? "1" : "0");
+    } catch (_) {}
+    const btn = document.getElementById("btn-toolbar-toggle");
+    if (btn) {
+      btn.setAttribute("aria-expanded", expanded ? "true" : "false");
+      btn.textContent = expanded ? "收起" : "展开";
+      btn.title = expanded ? "收起页头，留出复习空间" : "展开页头说明与筛选";
+    }
+  }
+
+  function loadToolbarPref() {
+    let expanded = false;
+    try {
+      expanded = localStorage.getItem(TOOLBAR_EXPAND_KEY) === "1";
+    } catch (_) {}
+    setToolbarExpanded(expanded);
+  }
+
+  loadToolbarPref();
+  document.getElementById("btn-toolbar-toggle")?.addEventListener("click", () => {
+    setToolbarExpanded(document.body.classList.contains("toolbar-collapsed"));
+  });
+
   loadShufflePref();
   loadPassPref();
   updateClearButtonsLabel();
@@ -4336,6 +4459,9 @@ window.GRAMMAR_SYNC_CONFIG = {"type": "http", "baseUrl": "https://jlptn1n2master
   function configured() {
     if (!CFG) return false;
     if (CFG.type === "http") {
+      if (CFG.sameOrigin || CFG.autoSameOrigin) {
+        return !isFileProtocol();
+      }
       const base = String(CFG.baseUrl || "");
       if (!base || base.includes("xxx.workers.dev")) return false;
       if (/github\.io|pages\.dev/i.test(base)) return false;
@@ -4366,15 +4492,61 @@ window.GRAMMAR_SYNC_CONFIG = {"type": "http", "baseUrl": "https://jlptn1n2master
     return location.protocol === "file:";
   }
 
+  function isIOS() {
+    return /iPad|iPhone|iPod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  }
+
+  function apiBase() {
+    if (!CFG) return "";
+    if (CFG.sameOrigin) {
+      const path = String(CFG.apiPath || "/api/grammar-sync").replace(/\/$/, "");
+      return `${location.origin}${path}`;
+    }
+    if (CFG.autoSameOrigin && /\.pages\.dev$/i.test(location.hostname)) {
+      const path = String(CFG.apiPath || "/api/grammar-sync").replace(/\/$/, "");
+      return `${location.origin}${path}`;
+    }
+    return String(CFG.baseUrl || "").replace(/\/$/, "");
+  }
+
   function formatFetchError(err) {
     if (isFileProtocol()) {
       return "不能用 file:// 打开；请运行 ./serve.sh 或启用 GitHub Pages（见 README）";
     }
     const msg = err && err.message ? err.message : String(err);
-    if (msg === "Failed to fetch") {
-      return "无法连接同步服务（请确认 Worker 已部署且地址正确，见 SYNC_README）";
+    if (msg === "Failed to fetch" || msg === "Load failed") {
+      const base = apiBase();
+      const crossSite = !CFG.sameOrigin && !CFG.autoSameOrigin && !/pages\.dev$/i.test(location.hostname);
+      if (isIOS() && crossSite) {
+        return (
+          "iPad 无法连接同步服务：Safari 常拦截跨站请求（GitHub Pages → workers.dev）。" +
+          "请在 iPad 用 Safari 打开 " +
+          (base ? `${base}/health ` : "Worker 的 /health ") +
+          "若打不开，多为网络限制；若打得开却仍失败，请到 设置→Safari→隐私 暂时关闭「防止跨站跟踪」后重试，或改用 Cloudflare Pages 部署（见 SYNC_README）"
+        );
+      }
+      return (
+        "无法连接同步服务。请用浏览器打开 " +
+        (base ? `${base}/health` : "Worker地址/health") +
+        " 应显示 ok；Mac 能连 iPad 不能时见 SYNC_README「iPad 同步」"
+      );
     }
     return msg;
+  }
+
+  async function syncFetch(url, init) {
+    const opts = { cache: "no-store", mode: "cors", ...init };
+    let lastErr;
+    for (let i = 0; i < 3; i++) {
+      try {
+        const res = await fetch(url, opts);
+        return res;
+      } catch (e) {
+        lastErr = e;
+        if (i < 2) await new Promise((r) => setTimeout(r, 400 * (i + 1)));
+      }
+    }
+    throw lastErr;
   }
 
   async function checkSyncReachable() {
@@ -4384,7 +4556,7 @@ window.GRAMMAR_SYNC_CONFIG = {"type": "http", "baseUrl": "https://jlptn1n2master
       return false;
     }
     try {
-      const res = await fetch(`${CFG.baseUrl.replace(/\/$/, "")}/health`);
+      const res = await syncFetch(`${apiBase()}/health`, { method: "GET" });
       if (!res.ok) throw new Error(`health ${res.status}`);
       return true;
     } catch (e) {
@@ -4529,7 +4701,7 @@ window.GRAMMAR_SYNC_CONFIG = {"type": "http", "baseUrl": "https://jlptn1n2master
   }
 
   async function pushHttp(id, payload, opts) {
-    const res = await fetch(`${CFG.baseUrl.replace(/\/$/, "")}/?id=${encodeURIComponent(id)}`, {
+    const res = await syncFetch(`${apiBase()}/?id=${encodeURIComponent(id)}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
@@ -4539,7 +4711,7 @@ window.GRAMMAR_SYNC_CONFIG = {"type": "http", "baseUrl": "https://jlptn1n2master
   }
 
   async function pullHttp(id) {
-    const res = await fetch(`${CFG.baseUrl.replace(/\/$/, "")}/?id=${encodeURIComponent(id)}`, {
+    const res = await syncFetch(`${apiBase()}/?id=${encodeURIComponent(id)}`, {
       headers: { Accept: "application/json" },
     });
     if (!res.ok) throw new Error(await res.text());

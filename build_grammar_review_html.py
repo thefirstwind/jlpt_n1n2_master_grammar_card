@@ -491,8 +491,10 @@ body {{
   flex-shrink: 0;
   z-index: 100;
   background: rgba(246,245,242,.95); backdrop-filter: blur(8px);
-  border-bottom: 1px solid var(--border); padding: .75rem 1rem;
+  border-bottom: 1px solid var(--border);
+  padding: .75rem 1rem;
 }}
+body.toolbar-collapsed .toolbar {{ padding: .35rem .55rem .4rem; }}
 .toolbar-top {{
   display: flex;
   align-items: flex-start;
@@ -500,19 +502,71 @@ body {{
   gap: 0.75rem 1.25rem;
   margin-bottom: 0.5rem;
 }}
+body.toolbar-collapsed .toolbar-top {{
+  align-items: center;
+  margin-bottom: 0.2rem;
+  gap: 0.35rem 0.6rem;
+}}
 .toolbar-brand {{ flex: 1; min-width: 0; }}
-.toolbar-brand h1 {{ margin: 0 0 .35rem; font-size: 1.15rem; font-weight: 700; }}
-.toolbar-brand .meta {{ font-size: .8rem; color: var(--muted); margin: 0; }}
+.toolbar-brand h1 {{
+  margin: 0 0 .35rem; font-size: 1.15rem; font-weight: 700;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}}
+body.toolbar-collapsed .toolbar-brand h1 {{ margin: 0; font-size: .92rem; }}
+.toolbar-brand .meta {{ font-size: .8rem; color: var(--muted); margin: 0; line-height: 1.35; }}
+body.toolbar-collapsed .toolbar-brand .meta {{ display: none; }}
 .toolbar h1 {{ margin: 0 0 .5rem; font-size: 1.15rem; font-weight: 700; }}
 .toolbar .meta {{ font-size: .8rem; color: var(--muted); margin-bottom: .5rem; }}
+.toolbar-toggle {{
+  flex-shrink: 0;
+  padding: .22rem .45rem;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: var(--card);
+  color: var(--muted);
+  cursor: pointer;
+  font-size: .72rem;
+  line-height: 1.2;
+}}
+.toolbar-toggle:hover {{ color: var(--text); border-color: #c5c9d2; }}
+.toolbar-controls-wrap {{
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}}
+body.toolbar-collapsed .toolbar-controls-wrap {{
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.28rem;
+}}
 .controls {{ display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }}
+body.toolbar-collapsed .controls {{ gap: .28rem; }}
 #q {{
   flex: 1; min-width: 160px; padding: .45rem .65rem;
   border: 1px solid var(--border); border-radius: 6px; font-size: .95rem;
 }}
+body.toolbar-collapsed #q {{
+  min-width: 88px; max-width: min(42vw, 220px);
+  padding: .28rem .45rem; font-size: .82rem;
+}}
 .filter-btn {{
   padding: .4rem .75rem; border: 1px solid var(--border); border-radius: 6px;
   background: var(--card); cursor: pointer; font-size: .85rem;
+}}
+body.toolbar-collapsed .filter-btn {{
+  padding: .24rem .45rem; font-size: .76rem; border-radius: 5px;
+}}
+body.toolbar-collapsed .lesson-select {{
+  padding: .24rem .35rem; font-size: .76rem; max-width: min(38vw, 160px);
+}}
+body.toolbar-collapsed .review-shuffle-toggle {{
+  padding: .22rem .38rem; font-size: .74rem;
+}}
+body.toolbar-collapsed .review-filter-btn {{ display: none; }}
+body.toolbar-collapsed .index-hint {{ display: none; }}
+body.toolbar-collapsed .index-panel h2 {{
+  padding: .3rem .65rem; font-size: .78rem;
 }}
 .filter-btn.active {{ background: var(--text); color: #fff; border-color: var(--text); }}
 .lesson-select {{
@@ -700,13 +754,14 @@ a.go:hover {{ text-decoration: underline; }}
 {ui_css}
 </style>
 </head>
-<body>
+<body class="toolbar-collapsed">
 <header class="toolbar">
   <div class="toolbar-top">
     <div class="toolbar-brand">
-      <h1>新完全掌握 · N1/N2 语法复习</h1>
+      <h1 title="新完全掌握 N1/N2 语法复习 · 共 {len(points)} 条（N1 {n1} · N2 {n2}）· 三遍复习 · 重要度★＝真题55%+网评45%">N1/N2 语法</h1>
       <p class="meta">共 {len(points)} 条（N1 {n1} · N2 {n2}）· 五十音 · 重要度★＝<span class="meta-hint" title="55% 本地27套N1真题 + 45% 网上分档综合评定">真题55%+网评45%</span> · 三遍复习 · 填<strong>同步邮箱</strong>可跨设备同步</p>
     </div>
+    <button type="button" class="toolbar-toggle" id="btn-toolbar-toggle" title="展开页头说明与筛选" aria-expanded="false">展开</button>
     <div class="sync-toolbar" id="sync-toolbar" hidden>
       <div class="sync-toolbar-row">
         <span class="sync-toolbar-label">同步</span>
@@ -716,6 +771,7 @@ a.go:hover {{ text-decoration: underline; }}
       <span id="sync-status" class="sync-status" title=""></span>
     </div>
   </div>
+  <div class="toolbar-controls-wrap">
   <div class="controls">
     <input type="search" id="q" placeholder="搜索语法（如：が早いか、にあって）…" autocomplete="off">
     <button type="button" class="filter-btn active" data-level="ALL">全部</button>
@@ -745,6 +801,7 @@ a.go:hover {{ text-decoration: underline; }}
       <input type="checkbox" id="pass-incomplete" checked> 仅本遍未完成
     </label>
     <button type="button" class="pass-clear-btn" data-clear-pass title="清除当前遍全部记录">清除第1遍</button>
+  </div>
   </div>
 </header>
 <main class="layout">

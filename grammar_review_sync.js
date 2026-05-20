@@ -19,6 +19,9 @@
   function configured() {
     if (!CFG) return false;
     if (CFG.type === "http") {
+      if (CFG.sameOrigin || CFG.autoSameOrigin) {
+        return !isFileProtocol();
+      }
       const base = String(CFG.baseUrl || "");
       if (!base || base.includes("xxx.workers.dev")) return false;
       if (/github\.io|pages\.dev/i.test(base)) return false;
@@ -49,15 +52,61 @@
     return location.protocol === "file:";
   }
 
+  function isIOS() {
+    return /iPad|iPhone|iPod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  }
+
+  function apiBase() {
+    if (!CFG) return "";
+    if (CFG.sameOrigin) {
+      const path = String(CFG.apiPath || "/api/grammar-sync").replace(/\/$/, "");
+      return `${location.origin}${path}`;
+    }
+    if (CFG.autoSameOrigin && /\.pages\.dev$/i.test(location.hostname)) {
+      const path = String(CFG.apiPath || "/api/grammar-sync").replace(/\/$/, "");
+      return `${location.origin}${path}`;
+    }
+    return String(CFG.baseUrl || "").replace(/\/$/, "");
+  }
+
   function formatFetchError(err) {
     if (isFileProtocol()) {
       return "不能用 file:// 打开；请运行 ./serve.sh 或启用 GitHub Pages（见 README）";
     }
     const msg = err && err.message ? err.message : String(err);
-    if (msg === "Failed to fetch") {
-      return "无法连接同步服务（请确认 Worker 已部署且地址正确，见 SYNC_README）";
+    if (msg === "Failed to fetch" || msg === "Load failed") {
+      const base = apiBase();
+      const crossSite = !CFG.sameOrigin && !CFG.autoSameOrigin && !/pages\.dev$/i.test(location.hostname);
+      if (isIOS() && crossSite) {
+        return (
+          "iPad 无法连接同步服务：Safari 常拦截跨站请求（GitHub Pages → workers.dev）。" +
+          "请在 iPad 用 Safari 打开 " +
+          (base ? `${base}/health ` : "Worker 的 /health ") +
+          "若打不开，多为网络限制；若打得开却仍失败，请到 设置→Safari→隐私 暂时关闭「防止跨站跟踪」后重试，或改用 Cloudflare Pages 部署（见 SYNC_README）"
+        );
+      }
+      return (
+        "无法连接同步服务。请用浏览器打开 " +
+        (base ? `${base}/health` : "Worker地址/health") +
+        " 应显示 ok；Mac 能连 iPad 不能时见 SYNC_README「iPad 同步」"
+      );
     }
     return msg;
+  }
+
+  async function syncFetch(url, init) {
+    const opts = { cache: "no-store", mode: "cors", ...init };
+    let lastErr;
+    for (let i = 0; i < 3; i++) {
+      try {
+        const res = await fetch(url, opts);
+        return res;
+      } catch (e) {
+        lastErr = e;
+        if (i < 2) await new Promise((r) => setTimeout(r, 400 * (i + 1)));
+      }
+    }
+    throw lastErr;
   }
 
   async function checkSyncReachable() {
@@ -67,7 +116,7 @@
       return false;
     }
     try {
-      const res = await fetch(`${CFG.baseUrl.replace(/\/$/, "")}/health`);
+      const res = await syncFetch(`${apiBase()}/health`, { method: "GET" });
       if (!res.ok) throw new Error(`health ${res.status}`);
       return true;
     } catch (e) {
@@ -212,7 +261,7 @@
   }
 
   async function pushHttp(id, payload, opts) {
-    const res = await fetch(`${CFG.baseUrl.replace(/\/$/, "")}/?id=${encodeURIComponent(id)}`, {
+    const res = await syncFetch(`${apiBase()}/?id=${encodeURIComponent(id)}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
@@ -222,7 +271,7 @@
   }
 
   async function pullHttp(id) {
-    const res = await fetch(`${CFG.baseUrl.replace(/\/$/, "")}/?id=${encodeURIComponent(id)}`, {
+    const res = await syncFetch(`${apiBase()}/?id=${encodeURIComponent(id)}`, {
       headers: { Accept: "application/json" },
     });
     if (!res.ok) throw new Error(await res.text());

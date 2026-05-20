@@ -103,10 +103,25 @@ def interactive() -> None:
 def main() -> None:
     p = argparse.ArgumentParser(description="写入 sync_config.builtin.js 并更新 index.html")
     p.add_argument("--http", metavar="URL", help="Cloudflare Worker 根地址")
+    p.add_argument(
+        "--same-origin",
+        action="store_true",
+        help="Cloudflare Pages 同源 API（/api/grammar-sync），适合 iPad Safari",
+    )
     p.add_argument("--supabase-url", metavar="URL", help="Supabase Project URL")
     p.add_argument("--supabase-key", metavar="KEY", help="Supabase anon key")
     args = p.parse_args()
 
+    if args.same_origin:
+        cfg = {
+            "type": "http",
+            "sameOrigin": True,
+            "apiPath": "/api/grammar-sync",
+            "autoSameOrigin": True,
+        }
+        write_config(cfg)
+        finish(cfg)
+        return
     if args.http:
         cfg = {"type": "http", "baseUrl": args.http.rstrip("/")}
         write_config(cfg)
