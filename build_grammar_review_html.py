@@ -469,7 +469,7 @@ def build_html(
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>新完全掌握语法N1/N2 · 复习</title>
+<title>JLPT新完全掌握语法 N1/N2 · 复习</title>
 <style>
 :root {{
   --bg: #f6f5f2; --card: #fff; --text: #1a1a1a; --muted: #666;
@@ -969,7 +969,7 @@ a.go:hover {{ text-decoration: underline; }}
   <div class="toolbar-body" id="toolbar-body">
     <div class="toolbar-row toolbar-row-head">
       <h1 class="toolbar-title" title="重要度★＝真题55%+网评45%（悬停★可见）">
-        新完全掌握语法N1/N2
+        JLPT新完全掌握语法 N1/N2
         <span class="title-sub">{len(points)} 条 · N1 {n1} · N2 {n2}</span>
       </h1>
       <div class="sync-toolbar" id="sync-toolbar" hidden>
