@@ -469,7 +469,7 @@ def build_html(
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>新完全掌握 N1/N2 语法复习</title>
+<title>新完全掌握语法N1/N2 · 复习</title>
 <style>
 :root {{
   --bg: #f6f5f2; --card: #fff; --text: #1a1a1a; --muted: #666;
@@ -658,15 +658,19 @@ body.toolbar-expanded .toolbar-body {{ padding-right: 3rem; }}
   html, body {{ height: 100%; overflow: hidden; }}
   body {{ display: flex; flex-direction: column; }}
   .toolbar-row-head {{ flex-direction: column; align-items: stretch; }}
-  .toolbar-group-review {{ margin-left: 0; width: 100%; }}
   .sync-toolbar {{ align-items: flex-start; max-width: 100%; }}
   .sync-toolbar-row {{ justify-content: flex-start; flex-wrap: wrap; }}
   .sync-status {{ text-align: left; max-width: 100%; }}
   .layout {{ flex: 1; min-height: 0; max-width: none; }}
-  .toolbar-group-search {{ flex: 1 1 100%; min-width: 0; }}
-  .toolbar-row:not(.toolbar-row-head) {{ align-items: stretch; }}
-  .toolbar-group-review {{ justify-content: flex-start; }}
   .lesson-select {{ max-width: 100%; }}
+}}
+/* 平板竖屏：筛选区纵向铺开 */
+@media (max-width: 1100px) and (orientation: portrait),
+       (hover: none) and (pointer: coarse) and (orientation: portrait) {{
+  .toolbar-group-search {{ flex: 1 1 100%; min-width: 0; }}
+  .toolbar-row-main,
+  .toolbar-row-actions {{ align-items: stretch; }}
+  .toolbar-group-review {{ margin-left: 0; width: 100%; justify-content: flex-start; }}
 }}
 /* 竖屏：索引在上、正文在下 */
 @media (max-width: 1100px) and (orientation: portrait),
@@ -714,6 +718,98 @@ body.toolbar-expanded .toolbar-body {{ padding-right: 3rem; }}
     overflow-y: auto;
     padding: .75rem 1rem 2rem;
   }}
+}}
+/* 平板横屏：页头紧凑两行（筛选 + 操作） */
+@media (hover: none) and (pointer: coarse) and (orientation: landscape),
+       (max-height: 560px) and (orientation: landscape) {{
+  body.toolbar-expanded .toolbar {{
+    padding: .3rem .5rem .32rem;
+  }}
+  body.toolbar-expanded .toolbar-body {{
+    padding-right: 2.7rem;
+  }}
+  body.toolbar-expanded .toolbar-row {{
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+    border-top: none !important;
+  }}
+  body.toolbar-expanded .toolbar-row + .toolbar-row {{
+    margin-top: .28rem;
+    padding-top: .28rem;
+    border-top: 1px solid var(--border);
+  }}
+  .toolbar-row-head {{
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: .4rem .5rem;
+    border: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }}
+  .toolbar-title .title-sub {{ display: none; }}
+  .toolbar-title {{ font-size: .88rem; }}
+  .sync-toolbar {{
+    flex-direction: row;
+    align-items: center;
+    gap: .3rem;
+    max-width: none;
+    margin-left: auto;
+  }}
+  .sync-toolbar-row {{ flex-wrap: nowrap; }}
+  .sync-input {{ width: 6.2rem; font-size: .76rem; padding: .24rem .4rem; }}
+  #sync-now {{ font-size: .76rem; padding: .24rem .45rem; }}
+  .sync-status {{
+    max-width: 8.5rem;
+    font-size: .62rem;
+    text-align: right;
+    display: block;
+  }}
+  .toolbar-row-main {{
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    grid-template-rows: auto auto;
+    gap: .25rem .35rem;
+    align-items: center;
+  }}
+  .toolbar-group-search {{ grid-column: 1 / -1; min-width: 0; }}
+  .toolbar-group-level {{ grid-column: 1; }}
+  .toolbar-group-familiarity {{ grid-column: 2 / -1; justify-self: end; }}
+  .toolbar-group-label {{ display: none; }}
+  .toolbar-group-level .lesson-select {{
+    max-width: 7.5rem;
+    font-size: .74rem;
+    padding: .22rem .3rem;
+  }}
+  .toolbar-row-actions {{
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: .28rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }}
+  .toolbar-row-actions::-webkit-scrollbar {{ display: none; }}
+  .toolbar-group-pass {{ flex-shrink: 0; }}
+  .pass-progress {{
+    flex-shrink: 0;
+    white-space: nowrap;
+    font-size: .68rem;
+    gap: .35rem;
+  }}
+  .pass-incomplete-toggle,
+  .pass-clear-btn {{ flex-shrink: 0; font-size: .72rem; white-space: nowrap; }}
+  .toolbar-group-review {{
+    margin-left: auto;
+    flex-shrink: 0;
+  }}
+  .review-stats {{ font-size: .68rem; }}
+  .btn-segment .filter-btn,
+  .btn-segment .pass-btn {{
+    padding: .24rem .4rem;
+    font-size: .73rem;
+  }}
+  #btn-review {{ padding: .24rem .5rem; }}
 }}
 .index-panel {{
   display: flex;
@@ -873,7 +969,7 @@ a.go:hover {{ text-decoration: underline; }}
   <div class="toolbar-body" id="toolbar-body">
     <div class="toolbar-row toolbar-row-head">
       <h1 class="toolbar-title" title="重要度★＝真题55%+网评45%（悬停★可见）">
-        N1/N2 语法
+        新完全掌握语法N1/N2
         <span class="title-sub">{len(points)} 条 · N1 {n1} · N2 {n2}</span>
       </h1>
       <div class="sync-toolbar" id="sync-toolbar" hidden>
@@ -884,11 +980,11 @@ a.go:hover {{ text-decoration: underline; }}
         <span id="sync-status" class="sync-status" title=""></span>
       </div>
     </div>
-    <div class="toolbar-row">
+    <div class="toolbar-row toolbar-row-main">
       <div class="toolbar-group toolbar-group-search">
         <input type="search" id="q" placeholder="搜索语法…" autocomplete="off">
       </div>
-      <div class="toolbar-group">
+      <div class="toolbar-group toolbar-group-level">
         <span class="toolbar-group-label">级别</span>
         <div class="btn-segment" role="group" aria-label="级别筛选">
           <button type="button" class="filter-btn active" data-level="ALL">全部</button>
@@ -899,7 +995,7 @@ a.go:hover {{ text-decoration: underline; }}
 {lesson_options}
         </select>
       </div>
-      <div class="toolbar-group">
+      <div class="toolbar-group toolbar-group-familiarity">
         <span class="toolbar-group-label">熟悉度</span>
         <div class="btn-segment" role="group" aria-label="按当前遍熟悉度筛选列表">
           <button type="button" class="filter-btn review-filter-btn active" data-review-filter="ALL">全部</button>
@@ -908,6 +1004,19 @@ a.go:hover {{ text-decoration: underline; }}
           <button type="button" class="filter-btn review-filter-btn" data-review-filter="good">熟悉</button>
         </div>
       </div>
+    </div>
+    <div class="toolbar-row toolbar-row-actions pass-toolbar">
+      <div class="toolbar-group toolbar-group-pass">
+        <span class="toolbar-group-label">遍次</span>
+        <div class="btn-segment" role="group" aria-label="当前复习遍次">
+          <button type="button" class="pass-btn active" data-pass="1">第1遍</button>
+          <button type="button" class="pass-btn" data-pass="2">第2遍</button>
+          <button type="button" class="pass-btn" data-pass="3">第3遍</button>
+        </div>
+      </div>
+      <span id="pass-progress" class="pass-progress"></span>
+      <label class="pass-incomplete-toggle" title="卡片复习只出本遍未完成"><input type="checkbox" id="pass-incomplete" checked> 仅未完成</label>
+      <button type="button" class="pass-clear-btn" data-clear-pass title="清除当前遍全部记录">清除本遍</button>
       <div class="toolbar-group toolbar-group-review">
         <span id="review-stats" class="review-stats"></span>
         <label class="review-shuffle-toggle" title="卡片复习打乱顺序"><input type="checkbox" id="review-shuffle" checked> 乱序</label>
@@ -915,16 +1024,6 @@ a.go:hover {{ text-decoration: underline; }}
         <button type="button" class="filter-btn" id="btn-review-weak">待复习</button>
       </div>
     </div>
-    <div class="toolbar-row pass-toolbar">
-      <span class="toolbar-group-label">遍次</span>
-      <div class="btn-segment" role="group" aria-label="当前复习遍次">
-        <button type="button" class="pass-btn active" data-pass="1">第1遍</button>
-        <button type="button" class="pass-btn" data-pass="2">第2遍</button>
-        <button type="button" class="pass-btn" data-pass="3">第3遍</button>
-      </div>
-      <span id="pass-progress" class="pass-progress"></span>
-      <label class="pass-incomplete-toggle" title="卡片复习只出本遍未完成"><input type="checkbox" id="pass-incomplete" checked> 仅未完成</label>
-      <button type="button" class="pass-clear-btn" data-clear-pass title="清除当前遍全部记录">清除本遍</button>
     </div>
   </div>
 </header>
