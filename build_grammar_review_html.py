@@ -24,6 +24,7 @@ OUT_HTML = REVIEW_DIR / "index.html"
 ANSWERS_JSON = REVIEW_DIR / "grammar_exercise_answers.json"
 EXPERT_ANSWERS_JSON = REVIEW_DIR / "grammar_exercise_answers_expert.json"
 ANALYSIS_JSON = REVIEW_DIR / "grammar_exercise_analysis.json"
+FINAL_TEXT_MD = REVIEW_DIR / "answers_fresh" / "final_usable_text.md"
 HIRAGANA_RE = re.compile(r"[\u3040-\u30ff]")
 IMPORTANCE_JSON = BASE / "jlpt_grammar_importance.json"
 IMPORTANCE_FALLBACK = BASE / "n1_grammar_importance.json"
@@ -44,6 +45,13 @@ EX_MIXED = re.compile(
 )
 QUESTION_LINE = re.compile(r"^\*\*\d+\*\*")
 REF_LESSON = re.compile(r"→\s*(\d+)\s*[课課]\s*[-－]\s*(\d+)")
+ANCHOR_RE = re.compile(r"^#{2,3}\s+(n[12]-l\d{2}-g\d{2})\s+")
+Q_RE = re.compile(r"^#{3,4}\s+Q(\d+)\s+")
+RULE_RE = re.compile(r"^\*\*规则\*\*[：:]\s*(.+)$")
+ANS_RE = re.compile(r"^\*\*答案[：:]\s*([abc])\*\*$")
+TABLE_ROW = re.compile(
+    r"^\|\s*\*{0,2}([abc])\s+(.+?)\*{0,2}\s*\|\s*(.+?)\s*\|?\s*$"
+)
 
 
 def skip_in_grammar_body(s: str) -> bool:
@@ -97,6 +105,65 @@ def split_inline_options(rest: str) -> tuple[str, list[tuple[str, str]]] | None:
     stem = _inline_md(parts[0])
     opts = [(parts[i], _inline_md(parts[i + 1])) for i in range(1, len(parts), 2)]
     return stem, opts
+
+
+def parse_final_usable_text(text: str) -> dict:
+    """从最终总稿解析出与 grammar_exercise_analysis.json 相同的结构。"""
+    result: dict = {}
+    cur_anchor: str | None = None
+    cur_q: str | None = None
+    in_table = False
+
+    for raw in text.splitlines():
+        line = raw.strip()
+        m = ANCHOR_RE.match(line)
+        if m:
+            cur_anchor = m.group(1)
+            result[cur_anchor] = {"rule": "", "questions": {}}
+            cur_q = None
+            in_table = False
+            continue
+        if not cur_anchor:
+            continue
+        rm = RULE_RE.match(line)
+        if rm:
+            result[cur_anchor]["rule"] = rm.group(1).strip()
+            continue
+        qm = Q_RE.match(line)
+        if qm:
+            cur_q = qm.group(1)
+            result[cur_anchor]["questions"][cur_q] = {
+                "answer": "",
+                "options": {},
+            }
+            in_table = False
+            continue
+        if cur_q and line.startswith("|") and "选项" in line:
+            in_table = True
+            continue
+        if cur_q and in_table and line.startswith("|") and not line.startswith("|---"):
+            row = TABLE_ROW.match(line)
+            if not row:
+                continue
+            letter, text_opt, reason = row.group(1), row.group(2).strip(), row.group(3).strip()
+            text_opt = re.sub(r"^\*\*|\*\*$", "", text_opt).strip()
+            reason = re.sub(r"^\*\*|\*\*$", "", reason).strip()
+            result[cur_anchor]["questions"][cur_q]["options"][letter] = {
+                "verdict": "wrong",
+                "reason": reason,
+            }
+            continue
+        am = ANS_RE.match(line)
+        if am and cur_q:
+            result[cur_anchor]["questions"][cur_q]["answer"] = am.group(1)
+            in_table = False
+
+    for entry in result.values():
+        for qd in (entry.get("questions") or {}).values():
+            ans = qd.get("answer", "")
+            for opt, od in (qd.get("options") or {}).items():
+                od["verdict"] = "correct" if opt == ans else "wrong"
+    return result
 
 
 def md_is_n2(md_path: Path) -> bool:
@@ -172,13 +239,7 @@ def body_fragment_to_html(text: str, *, strip_cn: bool = False) -> str:
 EX_ANS_MISSING_BADGE = (
     '<span class="ex-ans-missing" title="尚无标准答案，可选但无法自动判对错">未收录</span>'
 )
-EX_SHOW_ANSWERS_BTN = (
-    '<button type="button" class="ex-show-answers">显示参考答案与解析</button>'
-)
-EX_SHOW_ANSWERS_TOOLBAR = f'<p class="exercise-toolbar">{EX_SHOW_ANSWERS_BTN}</p>'
-EX_SHOW_ANSWERS_TOOLBAR_BOTTOM = (
-    f'<p class="exercise-toolbar exercise-toolbar-bottom">{EX_SHOW_ANSWERS_BTN}</p>'
-)
+EX_SHOW_ANSWERS_BTN = '<button type="button" class="ex-show-answers">解析</button>'
 
 
 def exercise_fragment_to_html(
@@ -219,7 +280,8 @@ def exercise_fragment_to_html(
                 items.append(
                     f'<div class="exercise-item{miss_cls}" data-q="{num}"{ans_attr}>'
                     f'<p class="exercise-q"><span class="q-num">{num}</span> {stem}{miss_badge}</p>'
-                    f'<ul class="options">{opt_html}</ul></div>'
+                    f'<ul class="options">{opt_html}</ul>'
+                    f'<p class="exercise-toolbar">{EX_SHOW_ANSWERS_BTN}</p></div>'
                 )
                 i += 1
                 continue
@@ -248,7 +310,8 @@ def exercise_fragment_to_html(
             items.append(
                 f'<div class="exercise-item{miss_cls}" data-q="{num}"{ans_attr}>'
                 f'<p class="exercise-q"><span class="q-num">{num}</span> {stem}{miss_badge}</p>'
-                f"{opts_block}</div>"
+                f"{opts_block}"
+                f'<p class="exercise-toolbar">{EX_SHOW_ANSWERS_BTN}</p></div>'
             )
             continue
         i += 1
@@ -363,20 +426,23 @@ def load_points() -> list[dict]:
 
 
 def load_exercise_answers() -> dict[str, dict[str, str]]:
-    """练习答案以 grammar_exercise_answers_expert.json 为准（全量重审，覆盖 OCR）。"""
-    if EXPERT_ANSWERS_JSON.exists():
-        expert = json.loads(EXPERT_ANSWERS_JSON.read_text(encoding="utf-8"))
-        return {k: {str(q): str(a).lower() for q, a in v.items()} for k, v in expert.items()}
-    if ANSWERS_JSON.exists():
-        data = json.loads(ANSWERS_JSON.read_text(encoding="utf-8"))
-        return {k: {str(q): str(a).lower() for q, a in v.items()} for k, v in data.items()}
-    return {}
+    """从最终总稿解析每题答案。"""
+    analysis = load_exercise_analysis()
+    answers: dict[str, dict[str, str]] = {}
+    for aid, entry in analysis.items():
+        qs = entry.get("questions") or {}
+        answers[aid] = {}
+        for q, qd in qs.items():
+            ans = str(qd.get("answer", "")).lower()
+            if ans:
+                answers[aid][str(q)] = ans
+    return answers
 
 
 def load_exercise_analysis() -> dict[str, dict]:
-    if not ANALYSIS_JSON.exists():
+    if not FINAL_TEXT_MD.exists():
         return {}
-    raw = json.loads(ANALYSIS_JSON.read_text(encoding="utf-8"))
+    raw = parse_final_usable_text(FINAL_TEXT_MD.read_text(encoding="utf-8"))
     return raw
 
 
@@ -488,10 +554,8 @@ def cards_html(
         if ex_html:
             ex_block = (
                 f'<section class="exercises"><h3>练习题（【{gnum}】）</h3>'
-                f"{EX_SHOW_ANSWERS_TOOLBAR}"
                 f'<p class="exercise-answer-ref">原书答案页：N1 p.180–185 · N2 p.295–327</p>'
-                f"{ex_html}"
-                f"{EX_SHOW_ANSWERS_TOOLBAR_BOTTOM}</section>"
+                f"{ex_html}</section>"
             )
         imp = importance.get(aid, {})
         stars = int(imp.get("stars") or 0)
@@ -1506,10 +1570,6 @@ def main() -> None:
         ans = answers_for_point(p, bodies, exercise_answers)
         if ans:
             answers_by_anchor[p["anchor_id"]] = ans
-    import validate_exercise_answers
-
-    validate_exercise_answers.main()
-
     html_out = build_html(
         points,
         bodies,

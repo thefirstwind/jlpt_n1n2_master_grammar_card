@@ -897,11 +897,15 @@
     });
   }
 
-  function revealExerciseAnswers(section) {
-    if (!section) return;
-    const card = section.closest(".grammar-card");
+  function revealExerciseAnswers(target) {
+    if (!target) return;
+    const scope = target;
+    const card = scope.closest(".grammar-card");
     const aid = card && card.id;
-    section.querySelectorAll(".exercise-item[data-answer]").forEach((item) => {
+    const items = scope.classList.contains("exercise-item")
+      ? [scope]
+      : Array.from(scope.querySelectorAll(".exercise-item[data-answer]"));
+    items.forEach((item) => {
       const correct = (item.dataset.answer || "").toLowerCase();
       if (!correct) return;
       item.classList.add("answered");
@@ -909,7 +913,7 @@
       if (show) show.classList.add("ex-correct");
       if (aid && item.dataset.q) renderExerciseAnalysis(item, aid, item.dataset.q);
     });
-    if (aid) revealExerciseAnalysis(section, aid);
+    if (aid && !scope.classList.contains("exercise-item")) revealExerciseAnalysis(scope, aid);
   }
 
   function handleExercisePick(li) {
@@ -957,7 +961,7 @@
     if (showBtn) {
       e.preventDefault();
       e.stopPropagation();
-      revealExerciseAnswers(showBtn.closest(".exercises"));
+      revealExerciseAnswers(showBtn.closest(".exercise-item") || showBtn.closest(".exercises"));
       return;
     }
     if (e.target.closest(".exercises .options li[data-opt]")) {

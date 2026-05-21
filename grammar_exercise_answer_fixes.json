@@ -1,1 +1,32 @@
-[]
+[
+  {
+    "anchor_id": "n2-l17-g01",
+    "pattern": "〜ことだし",
+    "q": "3",
+    "was": "b",
+    "now": "a",
+    "expert_b": "b",
+    "reason": "pick_first_valid",
+    "stem": "このベッドは品質もいいことだし、（　）。"
+  },
+  {
+    "anchor_id": "n2-l17-g05",
+    "pattern": "〜からには・〜以上（は）・〜上は",
+    "q": "1",
+    "was": "b",
+    "now": "c",
+    "expert_b": "b",
+    "reason": "only_one_valid",
+    "stem": "A社の社長が来るからには、（　）。"
+  },
+  {
+    "anchor_id": "n2-l17-g05",
+    "pattern": "〜からには・〜以上（は）・〜上は",
+    "q": "3",
+    "was": "b",
+    "now": "a",
+    "expert_b": "b",
+    "reason": "pick_first_valid",
+    "stem": "入館料を1,000円払った以上、（　）。"
+  }
+]
